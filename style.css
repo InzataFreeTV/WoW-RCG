@@ -1,0 +1,293 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Friz Quadrata", "Arial", sans-serif;
+  color: #fff;
+}
+
+/* Background video */
+#bgVideo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  filter: brightness(0.4);
+}
+
+/* Portal overlay */
+.portal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  text-align: center;
+  animation: fadeIn 1s forwards;
+}
+
+.portal {
+  background: rgba(0,0,0,0.7);
+  border: 3px solid gold;
+  border-radius: 20px;
+  padding: 40px 60px;
+  position: relative;
+  box-shadow: 0 0 30px gold;
+  overflow: hidden;
+}
+
+/* Portal magical particles */
+.portal::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0,255,255,0.2) 0%, transparent 70%);
+  animation: portalParticles 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes portalParticles {
+  0% { transform: rotate(0deg) translateX(0); }
+  100% { transform: rotate(360deg) translateX(0); }
+}
+
+.portal h1 {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 8px #000;
+  color: gold;
+  animation: textGlow 2s ease-in-out infinite alternate;
+}
+
+.portal p {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+  text-shadow: 1px 1px 5px #000;
+  color: #ffd700;
+}
+
+/* Buttons */
+button {
+  padding: 12px 28px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border: 2px solid gold;
+  border-radius: 8px;
+  background: black;
+  color: gold;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+button:hover {
+  background: gold;
+  color: black;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px gold;
+}
+
+/* Fade animations */
+.hidden { display: none; }
+
+.fade-out {
+  animation: fadeOut 1s forwards;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes textGlow {
+  from { text-shadow: 2px 2px 8px #000, 0 0 10px gold; }
+  to { text-shadow: 2px 2px 12px #000, 0 0 25px gold; }
+}
+
+/* Main generator container */
+.container {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  padding-bottom: 56px; /* room for the fixed footer (adjust if you change footer height) */
+}
+
+/* Generator header */
+h1.generator-title {
+  margin-bottom: 30px;
+  font-size: 3rem;
+  text-shadow: 2px 2px 5px #000;
+  color: gold;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 150px;
+}
+
+label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: gold;
+  text-shadow: 1px 1px 2px #000;
+}
+
+/* Dropdowns styled with glow */
+select, input[type="checkbox"] {
+  padding: 6px 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 2px solid gold;
+  background: black;
+  color: gold;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+select:hover, input[type="checkbox"]:hover {
+  box-shadow: 0 0 10px gold;
+}
+
+/* Dropdown options */
+select option {
+  background: black;
+  color: gold;
+}
+
+/* Result */
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  background: rgba(0,0,0,0.6);
+  padding: 8px 15px;
+  border: 2px solid gold;
+  border-radius: 8px;
+  min-width: 300px;
+}
+
+/* Icons */
+.icon {
+  width: 40px;
+  height: 40px;
+}
+
+/* Tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: max-content;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px 10px;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Tooltip that follows the cursor for server connected-realms */
+.custom-server-tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: rgba(0,0,0,0.85);
+  color: #ffd700;
+  border: 1px solid gold;
+  padding: 6px 10px;
+  border-radius: 6px;
+  z-index: 9999;
+
+  /* allow normal wrapping into as many rows as needed */
+  white-space: normal;
+  max-width: 520px;
+  line-height: 1.25;
+  font-size: 0.95rem;
+
+  /* allow tall tooltips if necessary (won't block pointer events) */
+  max-height: 60vh;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  visibility: hidden;
+}
+
+.custom-server-tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* small footer note */
+.footer-note {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #cfcfcf;
+  margin-top: 12px;
+  opacity: 0.95;
+  user-select: none;
+
+  /* keep footer always at the bottom of the viewport */
+  position: fixed;
+  left: 0;
+  bottom: 8px;
+  width: 100%;
+  pointer-events: none; /* don't block clicks */
+  z-index: 1000;
+  background: transparent;
+  padding: 4px 8px;
+}

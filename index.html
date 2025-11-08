@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WoW Character Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background video -->
+  <video autoplay muted loop id="bgVideo">
+    <source src="backgrounds/warwithin-bg.mkv" type="video/webm">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Portal overlay -->
+  <div id="portalOverlay" class="portal-container">
+    <div class="portal">
+      <div class="portal-glow"></div>
+      <h1>World of Warcraft</h1>
+      <p>Random Character Generator</p>
+      <button id="enterBtn">Create</button>
+    </div>
+  </div>
+
+  <!-- Main container -->
+  <div class="container hidden" id="generatorContainer">
+    <h1>World of Warcraft Character Generator</h1>
+
+    <div class="controls">
+      <div class="control-group">
+        <label for="factionLock">Faction:</label>
+        <select id="factionLock"></select>
+      </div>
+      <div class="control-group">
+        <label for="raceLock">Race:</label>
+        <select id="raceLock"></select>
+      </div>
+      <div class="control-group">
+        <label for="classLock">Class:</label>
+        <select id="classLock"></select>
+      </div>
+
+      <div class="control-group">
+        <label for="generateName">Generate Name:</label>
+        <input type="checkbox" id="generateName">
+      </div>
+
+      <div class="control-group">
+        <label for="includeAccents">Include Accents:</label>
+        <input type="checkbox" id="includeAccents" disabled>
+      </div>
+
+      <div class="control-group">
+        <label for="serverLock">Server:</label>
+        <select id="serverLock">
+          <option value="none" selected>Don't Randomize</option>
+          <option value="random">Random Server</option>
+        </select>
+      </div>
+
+      <div class="control-group hidden" id="genderContainer">
+        <label for="genderSelect" id="genderLabel">Gender:</label>
+        <select id="genderSelect">
+          <option value="">Any</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+
+      <button id="generateBtn">Generate Character</button>
+    </div>
+
+    <div id="result" class="result"></div>
+
+    <div class="footer-note" aria-hidden="true">
+      Made for World of Warcraft enthusiasts. Fanmade by Inzata.
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
