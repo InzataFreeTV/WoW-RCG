@@ -1,0 +1,38 @@
+How to launch (Windows)
+
+Recommended (uses launch.bat):
+1. Ensure Node.js is installed (includes npx). Check with:
+   - node --version
+   - npx --version
+
+2. Double-click launch.bat in the project folder (or run it from a Command Prompt):
+   - The script will try to run: npx http-server -p 8000 -a 127.0.0.1
+   - If npx is found it will open your default browser at: http://127.0.0.1:8000
+   - If npx is not found the script will open index.html directly (may fail for ES modules).
+
+Manual start (if you prefer):
+- Open a Command Prompt in the project folder and run:
+  npx http-server -p 8000 -a 127.0.0.1
+- Then open: http://127.0.0.1:8000
+
+Alternative (no server):
+- Double-click index.html (may work for simple pages, but ES modules often require a local server).
+
+Troubleshooting
+- "Unable to connect" in the browser:
+  - Confirm the server window started and shows http-server logs.
+  - Try http://127.0.0.1:8000 instead of http://localhost:8000.
+  - Run from a terminal so you can see errors: open cmd → cd to the folder → launch.bat
+  - Check npx availability: npx --version
+  - Check the port is listening: netstat -an | find "8000"
+  - Try another browser (Firefox proxy/settings can block local connections).
+  - Temporarily allow the process through Windows Firewall/AV.
+
+- If the server fails to start:
+  - Copy any error text from the server window and share it for diagnosis.
+  - Ensure you are in the project folder (index.html, script.js, style.css and assets present).
+
+Notes
+- Keep index.html, style.css, script.js and assets in the same folder as launch.bat.
+- A local server is recommended if your app uses type="module" or fetches local files.
+- If you want a single-file version (no server needed) ask for a merged index.html and I can create it.
