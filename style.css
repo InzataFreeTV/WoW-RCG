@@ -10,15 +10,13 @@
 /* Background video */
 #bgVideo {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   z-index: -1;
-  filter: brightness(0.4);
+  filter: brightness(0.9);
 }
 
 /* Portal overlay */
@@ -80,8 +78,8 @@
   color: #ffd700;
 }
 
-/* Buttons */
-button {
+/* Primary action buttons (do not apply to .copy-btn) */
+button:not(.copy-btn) {
   padding: 12px 28px;
   font-size: 1.2rem;
   cursor: pointer;
@@ -93,7 +91,7 @@ button {
   transition: all 0.3s;
 }
 
-button:hover {
+button:not(.copy-btn):hover {
   background: gold;
   color: black;
   transform: scale(1.05);
@@ -216,7 +214,20 @@ select option {
 /* Tooltip */
 .tooltip {
   position: relative;
+  /* keep positioning but don't force display.
+     This prevents overriding .result-row (which needs display:flex). */
+}
+
+/* helper: use this on elements that truly need inline-block */
+.tooltip-inline {
   display: inline-block;
+}
+
+/* ensure result rows that also use .tooltip stay flex */
+.result-row.tooltip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .tooltip .tooltiptext {
@@ -291,3 +302,112 @@ select option {
   background: transparent;
   padding: 4px 8px;
 }
+
+/* small icon-style copy button placed inside the .result-row */
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin-left: 12px; /* default spacing */
+  border-radius: 5px;
+  border: none;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  cursor: pointer;
+  transition: background 120ms ease, transform 120ms ease;
+  user-select: none;
+  flex-shrink: 0;
+  position: relative; /* for the inline tooltip */
+}
+
+/* push the copy icon to the far right of the result row */
+.result-row .copy-btn {
+  margin-left: auto;
+}
+
+/* SVG sizing */
+.copy-btn svg {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+.copy-btn:hover {
+  background: rgba(255,255,255,0.10);
+  transform: translateY(-1px);
+}
+.copy-btn:disabled {
+  opacity: 0.8;
+  cursor: default;
+  transform: none;
+}
+
+/* small inline "Copied" tooltip shown above the icon when copy succeeds */
+.copy-btn .copied-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: rgba(0,0,0,0.9);
+  color: #ffd700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 140ms ease, transform 140ms ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  z-index: 100;
+}
+
+/* visible state */
+.copy-btn.copied .copied-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* small select button added to faction/race/class rows */
+.select-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;         /* minimal vertical padding */
+  height: 20px;           /* force compact height */
+  margin-left: 10px;
+  border-radius: 4px;
+  border: none;
+  background: rgba(255,255,255,0.04);
+  color: #ffd700;
+  cursor: pointer;
+  transition: background 120ms ease, transform 120ms ease;
+  flex-shrink: 0;
+
+  /* size by content but keep compact */
+  width: 40px;
+  min-width: 0;
+  line-height: 20px;
+  font-size: 0.65rem;     /* smaller text so button appears smaller */
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* keep the button visually on the far-right of the row */
+.result-row .select-btn {
+  margin-left: auto;
+  align-self: center;
+}
+
+/* hover / selected states (unchanged) */
+.select-btn:hover { background: rgba(255,255,255,0.07); transform: translateY(-1px); }
+.select-btn.selected {
+  background: rgba(255,215,0,0.14);
+  box-shadow: 0 0 8px rgba(255,215,0,0.12);
+}
+
+/* ensure select button doesn't push layout — keep it to the far right when used */
+.result-row { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
+.result-row > span:first-child { flex: 0 0 auto; }
+.result-row .char-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

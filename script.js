@@ -280,29 +280,147 @@ generateBtn.addEventListener('click', () => {
 
 // ------------------- DISPLAY -------------------
 function displayResult(faction, raceObj, chosenClass, name) {
-  let html = `
-    <div class="result-row icon-row tooltip">
-      <img src="${factions.find(f => f.name === faction).icon}" class="icon" alt="${faction}">
-      <span><strong>Faction:</strong> ${faction}</span>
-      <span class="tooltiptext">${faction} faction</span>
-    </div>
-    <div class="result-row icon-row tooltip">
-      <img src="${raceObj.icon}" class="icon" alt="${raceObj.name}">
-      <span><strong>Race:</strong> ${raceObj.name}</span>
-      <span class="tooltiptext">${raceObj.name} race</span>
-    </div>
-    <div class="result-row icon-row tooltip">
-      <img src="${classes[chosenClass.replace(/\s+/g, '')]}" class="icon" alt="${chosenClass}">
-      <span><strong>Class:</strong> ${chosenClass}</span>
-      <span class="tooltiptext">${chosenClass} class</span>
-    </div>
-  `;
+  // clear previous result
+  result.innerHTML = '';
 
-  if (generateNameCheckbox.checked && name) {
-    html += `<div class="result-row"><strong>Name:</strong>&nbsp;${name}</div>`;
+  // helper to create the standard icon + label row used for faction/race/class
+  // when selectTargetId is provided, a small button will set that select to value
+  const makeIconRow = (iconSrc, label, value, tooltipText, selectTargetId) => {
+     const row = document.createElement('div');
+     row.className = 'result-row icon-row tooltip';
+
+     if (iconSrc) {
+       const img = document.createElement('img');
+       img.src = iconSrc;
+       img.className = 'icon';
+       img.alt = value;
+       row.appendChild(img);
+     }
+
+     const span = document.createElement('span');
+     span.innerHTML = `<strong>${label}:</strong> ${value}`;
+     row.appendChild(span);
+
+     const tip = document.createElement('span');
+     tip.className = 'tooltiptext';
+     tip.textContent = tooltipText;
+     row.appendChild(tip);
+
+    // add a small select button to auto-select this value in the controls dropdown
+    if (selectTargetId) {
+      const selBtn = document.createElement('button');
+      selBtn.type = 'button';
+      selBtn.className = 'select-btn';
+      selBtn.title = `Select ${label}`;
+      selBtn.setAttribute('aria-label', `Select ${label}`);
+      // simple text label so the button reads "Lock"
+      selBtn.textContent = 'Lock';
+
+      // click handler: set select value and dispatch change so any listeners run
+      selBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const target = document.getElementById(selectTargetId);
+        if (!target) return;
+        // only set if option exists; otherwise try to add it
+        const opt = Array.from(target.options).find(o => o.value === value);
+        if (!opt) {
+          const newOpt = document.createElement('option');
+          newOpt.value = value;
+          newOpt.textContent = value;
+          target.appendChild(newOpt);
+        }
+        target.value = value;
+        // dispatch change so UI updates/reactive logic runs
+        target.dispatchEvent(new Event('change', { bubbles: true }));
+
+        // visual feedback on button
+        selBtn.classList.add('selected');
+        setTimeout(() => selBtn.classList.remove('selected'), 900);
+      });
+
+      // push button to the far-right of the row
+      selBtn.style.marginLeft = 'auto';
+      row.appendChild(selBtn);
+    }
+
+     return row;
+   };
+ 
+   // Faction row (safe icon lookup)
+  const factionIcon = (factions.find(f => f.name === faction) || {}).icon || '';
+  result.appendChild(makeIconRow(factionIcon, 'Faction', faction, `${faction} faction`, 'factionLock'));
+ 
+   // Race row
+  result.appendChild(makeIconRow(raceObj.icon, 'Race', raceObj.name, `${raceObj.name} race`, 'raceLock'));
+ 
+   // Class row (safe icon lookup)
+   const classKey = (chosenClass || '').replace(/\s+/g, '');
+   const classIcon = classes[classKey] || '';
+   result.appendChild(makeIconRow(classIcon, 'Class', chosenClass, `${chosenClass} class`, 'classLock'));
+ 
+   // Name row with copy button (only when a name was provided)
+   if (name) {
+     const nameRow = document.createElement('div');
+     nameRow.className = 'result-row';
+
+    const label = document.createElement('span');
+    label.innerHTML = '<strong>Name:</strong>&nbsp;';
+    nameRow.appendChild(label);
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'char-name';
+    nameSpan.textContent = name;
+    nameRow.appendChild(nameSpan);
+
+    // small icon-only copy button
+    const copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
+    copyBtn.className = 'copy-btn';
+    copyBtn.title = 'Copy name to clipboard';
+    copyBtn.setAttribute('aria-label', 'Copy name to clipboard');
+    copyBtn.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect x="9" y="2" width="6" height="3" rx="1" fill="currentColor"></rect>
+        <rect x="5" y="6" width="14" height="14" rx="2" fill="currentColor"></rect>
+      </svg>
+    `;
+
+    const copiedTip = document.createElement('span');
+    copiedTip.className = 'copied-tooltip';
+    copiedTip.textContent = 'Copied';
+    copyBtn.appendChild(copiedTip);
+
+    // push the copy button to the far right
+    copyBtn.style.marginLeft = 'auto';
+    nameRow.appendChild(copyBtn);
+
+    const textToCopy = nameSpan.textContent || '';
+
+    copyBtn.addEventListener('click', async () => {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(textToCopy);
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = textToCopy;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          ta.setSelectionRange(0, ta.value.length);
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        }
+        copyBtn.classList.add('copied');
+        setTimeout(() => copyBtn.classList.remove('copied'), 1200);
+      } catch (err) {
+        console.error('Copy failed', err);
+      }
+    });
+
+    result.appendChild(nameRow);
   }
-
-  result.innerHTML = html;
 }
 
 // ------------------- NAME GENERATION -------------------
