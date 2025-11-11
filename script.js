@@ -30,6 +30,11 @@ enterBtn.addEventListener('click', () => {
   }, FADE_OUT_DURATION);
 });
 
+// --- INCLUDE AUDIOHANDLER ---
+import('./assets/js/audiohandler.js').then(() => {
+  // Audio handler loaded
+});
+
 import { raceNameSyllables, accentedVariants } from './nameData.js';
 import { connectedRealms, notConnectedRealms, getRandomServer } from './servers.js';
 import { races, factions, classes } from './gameData.js';
