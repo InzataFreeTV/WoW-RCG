@@ -1,14 +1,33 @@
-// --- PORTAL TRANSITION ---
+// --- CONSTANTS ---
+const FADE_OUT_DURATION = 1000;
+const MAX_NAME_LENGTH = 12;
+const ACCENT_PROBABILITY = 0.2;
+const NAME_MIDDLE_PROBABILITY = 0.3;
+const GENDER_RANDOM_PROBABILITY = 0.5;
+
+// --- DOM CACHE ---
 const portalOverlay = document.getElementById('portalOverlay');
 const generatorContainer = document.getElementById('generatorContainer');
 const enterBtn = document.getElementById('enterBtn');
+const raceLock = document.getElementById('raceLock');
+const classLock = document.getElementById('classLock');
+const serverLock = document.getElementById('serverLock');
+const factionLock = document.getElementById('factionLock');
+const generateBtn = document.getElementById('generateBtn');
+const result = document.getElementById('result');
+const generateNameCheckbox = document.getElementById('generateName');
+const includeAccents = document.getElementById('includeAccents');
+const genderSelect = document.getElementById('genderSelect');
+const genderLabel = document.getElementById('genderLabel');
+const genderContainer = document.getElementById('genderContainer');
 
+// --- PORTAL TRANSITION ---
 enterBtn.addEventListener('click', () => {
   portalOverlay.classList.add('fade-out');
   setTimeout(() => {
     portalOverlay.classList.add('hidden');
     generatorContainer.classList.remove('hidden');
-  }, 1000); // wait for fade-out animation
+  }, FADE_OUT_DURATION);
 });
 
 import { raceNameSyllables, accentedVariants } from './nameData.js';
@@ -71,17 +90,7 @@ const classes = {
   Monk: "icons/classes/monk.png"
 };
 
-// ------------------- DOM -------------------
-const raceLock = document.getElementById('raceLock');
-const classLock = document.getElementById('classLock');
-const serverLock = document.getElementById('serverLock');
-const factionLock = document.getElementById('factionLock');
-const generateBtn = document.getElementById('generateBtn');
-const result = document.getElementById('result');
-const generateNameCheckbox = document.getElementById('generateName');
-const includeAccents = document.getElementById('includeAccents');
-const genderSelect = document.getElementById('genderSelect');
-const genderLabel = document.getElementById('genderLabel');
+
 
 // Populate faction dropdown
 factionLock.innerHTML = '<option value="">Any</option>';
@@ -156,11 +165,9 @@ classLock.addEventListener('change', updateFilters);
 generateNameCheckbox.addEventListener('change', () => {
   includeAccents.disabled = !generateNameCheckbox.checked;
   if (generateNameCheckbox.checked) {
-    genderSelect.classList.remove('hidden');
-    genderLabel.classList.remove('hidden');
+    genderContainer.classList.remove('hidden');
   } else {
-    genderSelect.classList.add('hidden');
-    genderLabel.classList.add('hidden');
+    genderContainer.classList.add('hidden');
   }
 });
 
@@ -200,7 +207,7 @@ generateBtn.addEventListener('click', () => {
   let name = "";
   if (generateNameCheckbox.checked) {
     let genderToUse = selectedGender;
-    if (!selectedGender) genderToUse = Math.random() < 0.5 ? "male" : "female";
+    if (!selectedGender) genderToUse = Math.random() < GENDER_RANDOM_PROBABILITY ? "male" : "female";
     name = generateRaceName(raceObj.name, includeAccents.checked, genderToUse);
   }
 
@@ -432,11 +439,11 @@ function generateRaceName(race, withAccents, gender = "") {
   else if (syll.any) syll = syll.any;
 
   const parts = [randomChoice(syll.start)];
-  if (Math.random() > 0.3) parts.push(randomChoice(syll.middle));
+  if (Math.random() > NAME_MIDDLE_PROBABILITY) parts.push(randomChoice(syll.middle));
   parts.push(randomChoice(syll.end));
 
   let name = parts.join('');
-  if (name.length > 12) name = name.slice(0, 12);
+  if (name.length > MAX_NAME_LENGTH) name = name.slice(0, MAX_NAME_LENGTH);
   name = name.charAt(0).toUpperCase() + name.slice(1);
 
   if (withAccents) name = applyAccents(name);
@@ -450,7 +457,7 @@ function randomChoice(arr) {
 function applyAccents(name) {
   return name.split('').map(ch => {
     const lower = ch.toLowerCase();
-    if (accentedVariants[lower] && Math.random() < 0.2) {
+    if (accentedVariants[lower] && Math.random() < ACCENT_PROBABILITY) {
       const accent = randomChoice(accentedVariants[lower]);
       return ch === lower ? accent : accent.toUpperCase();
     }
