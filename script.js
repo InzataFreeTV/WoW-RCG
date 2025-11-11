@@ -5,6 +5,25 @@ const ACCENT_PROBABILITY = 0.2;
 const NAME_MIDDLE_PROBABILITY = 0.3;
 const GENDER_RANDOM_PROBABILITY = 0.5;
 
+const factionBackgrounds = {
+  "Alliance": {
+    mp4: "assets/video/alliance_creation.mp4",
+    webm:"assets/video/alliance_creation.webm",
+    poster:"assets/img/bg/alliance_creation.png"
+  },
+  "Horde": {
+    mp4: "assets/video/horde_creation.mp4",
+    webm:"assets/video/horde_creation.webm",
+    poster:"assets/img/bg/horde_creation.png"
+  },
+  // fallback / neutral (optional)
+  "Neutral": {
+    mp4: "assets/video/neutral_creation.mp4",
+    webm:"assets/video/neutral_creation.webm",
+    poster:"assets/img/bg/neutral_creation.png"
+  }
+};
+
 // --- DOM CACHE ---
 const portalOverlay = document.getElementById('portalOverlay');
 const generatorContainer = document.getElementById('generatorContainer');
@@ -165,6 +184,8 @@ generateBtn.addEventListener('click', () => {
   } else {
     chosenServer = selectedServer;
   }
+
+  applyFactionBackground(faction);
 
   displayResult(faction, raceObj, classChoice, name);
   // append server to result display
@@ -405,4 +426,47 @@ function applyAccents(name) {
     }
     return ch;
   }).join('');
+}
+
+function applyFactionBackground(faction) {
+  const bg = document.getElementById('background');
+  if (!bg) return;
+
+  const entry = factionBackgrounds[faction];
+  if (!entry) {
+    // clear/background fallback
+    if (bg.tagName && bg.tagName.toLowerCase() === 'video') {
+      try { bg.pause(); } catch(e){}
+      while (bg.firstChild) bg.removeChild(bg.firstChild);
+      bg.removeAttribute('src');
+      try { bg.load(); } catch(e){}
+    } else {
+      bg.style.backgroundImage = '';
+    }
+    return;
+  }
+
+  if (bg.tagName && bg.tagName.toLowerCase() === 'video') {
+    // ensure sources exist / set them
+    let webmSrc = bg.querySelector('source[type="video/webm"]');
+    let mp4Src  = bg.querySelector('source[type="video/mp4"]');
+
+    if (!webmSrc) { webmSrc = document.createElement('source'); webmSrc.type = 'video/webm'; bg.appendChild(webmSrc); }
+    if (!mp4Src)  { mp4Src  = document.createElement('source'); mp4Src.type  = 'video/mp4';  bg.appendChild(mp4Src); }
+
+    webmSrc.src = entry.webm;
+    mp4Src.src  = entry.mp4;
+
+    // remove any direct src attr (use <source>)
+    try { bg.removeAttribute('src'); } catch(e){}
+
+    try { bg.load(); } catch(e){}
+    bg.muted = true; // autoplay friendly
+    bg.play().catch(()=>{});
+  } else {
+    // element is non-video; set CSS background image (poster)
+    bg.style.backgroundImage = `url("${entry.poster}")`;
+    bg.style.backgroundSize = 'cover';
+    bg.style.backgroundPosition = 'center';
+  }
 }

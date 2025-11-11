@@ -9,23 +9,41 @@
 
 
 /* Primary action buttons (do not apply to .copy-btn) */
+/* Replaced generic button styling with portal-style UI buttons that use the assets/img/ui graphics */
 button:not(.copy-btn) {
-  padding: 12px 28px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  border: 2px solid gold;
-  border-radius: 8px;
-  background: black;
-  color: gold;
-  font-weight: bold;
-  transition: all 0.3s;
+  font-family: 'FRIZQT', sans-serif;
+  font-size: 23px;
+  text-align: center;
+  color: #ffc700;
+  text-shadow: 0 0 8px #000, 0 0 8px #000, 0 0 8px #000, 0 0 8px #000, 0 0 8px #000;
+
+  /* use the portal button graphics (paths relative to project root) */
+  background: url('assets/img/ui/buttons/button_idle.png') no-repeat top;
+  width: 270px;
+  height: 71px;
+
+  border: none;
+  outline: none;
+  display: inline-block;
+  transform: scale(0.8);
+  filter: drop-shadow(0 0 8px #000);
+  cursor: url('assets/img/ui/Point.png'), auto;
+
+  padding: 0;
+  margin: 0;
 }
 
+/* hover / active states use the matching UI images */
 button:not(.copy-btn):hover {
-  background: gold;
-  color: black;
-  transform: scale(1.05);
-  box-shadow: 0 0 15px gold;
+  color: #ffffff;
+  background: url('assets/img/ui/buttons/button_hover.png') no-repeat top;
+  transform: scale(0.82);
+}
+
+button:not(.copy-btn):active {
+  color: #ffffff;
+  background: url('assets/img/ui/buttons/button_pressed.png') no-repeat top;
+  transform: scale(0.79);
 }
 
 /* Fade animations */
