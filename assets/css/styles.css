@@ -354,6 +354,7 @@ html, body {
   padding: 20px;
   text-align: center;
   padding-bottom: 56px; /* room for the fixed footer (adjust if you change footer height) */
+  cursor: url('../img/ui/Point.png'), auto;
 }
 
 /* Generator header */
@@ -396,18 +397,20 @@ select, input[type="checkbox"] {
   background: black;
   color: gold;
   outline: none;
-  cursor: pointer;
+  cursor: url('../img/ui/Point.png'), auto;
   transition: all 0.3s;
 }
 
 select:hover, input[type="checkbox"]:hover {
   box-shadow: 0 0 10px gold;
+  cursor: url('../img/ui/Point.png'), auto;
 }
 
 /* Dropdown options */
 select option {
   background: black;
   color: gold;
+  cursor: url('../img/ui/Point.png'), auto;
 }
 
 /* Result */
@@ -637,3 +640,7 @@ select option {
 .result-row { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
 .result-row > span:first-child { flex: 0 0 auto; }
 .result-row .char-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.checkbox {
+    cursor: url('../img/ui/Cast.png'), auto;
+}
