@@ -10,8 +10,6 @@ var expansionMap = [
     'Legion',
     'BattleForAzeroth',
     'Shadowlands',
-    'Dragonflight',
-    'TheWarWithin',
 ]
 
 var audioPath = './assets/audio';
@@ -27,9 +25,7 @@ var verMap = [
     'Version 6.2.0 (20173) (Release x64)',
     'Version 7.3.5 (26365) (Release x64)',
     'Version 8.3.7 (35662) (Release x64)',
-    'Version 9.0.1 (35944) (Release x64)',
-    'Version 10.0.7 (53466) (Release x64)',
-    'Version 11.0.2 (56033) (Release x64)'
+    'Version 9.0.1 (35944) (Release x64)'
 ];
 
 var dateMap = [
@@ -41,17 +37,13 @@ var dateMap = [
     'Jun 20 2015',
     'Apr 3 2018',
     'Aug 24 2020',
-    'Oct 13 2020',
-    'Feb 28 2024',
-    'Aug 26 2024'
+    'Oct 13 2020'
 ];
 
 var buttonColorMap = [
     0,
     0,
     1,
-    0,
-    0,
     0,
     0,
     0,
@@ -69,16 +61,13 @@ var copyMap = [
     2015,
     2018,
     2020,
-    2020,
-    2024,
-    2024
+    2020
 ];
 
 var cursor;
 var audio = new Audio();
 var buttonAudio = new Audio();
 var audioInitialPlayback = false;
-var queuePos = null;
 var disconnected = false;
 
 function init()
@@ -86,7 +75,6 @@ function init()
     switchExpansion();
     window.addEventListener('click', waitForInteractionToPlayAudio);
 
-    getPositionInQueue();
     setInterval(determineIfDisconnect, 8000);
 }
 
@@ -100,56 +88,6 @@ function waitForInteractionToPlayAudio()
         audio.play();
         audioInitialPlayback = true;
     }
-}
-
-function determineIfDisconnect()
-{
-    if(!disconnected)
-    {
-        var rand = Math.random();
-        if(rand < 0.75)
-            getPositionInQueue();
-    }
-}
-
-function getPositionInQueue()
-{
-    var number;
-    if(queuePos === null)
-    {    
-        number = Math.floor(Math.random() * Math.floor(10000));
-        queuePos = number;
-    }
-    else
-    {
-        number = Math.floor(queuePos - (Math.random() * Math.floor(15)));
-        queuePos = number;
-
-        if(queuePos < 3)
-        {
-            number = 0;
-            queuePos = 0;
-            doDisconnect();
-        }
-    }
-
-    document.getElementById('queuePosition').innerHTML = 'Position in Queue: ' + number;
-    getEstimatedTime(number)
-}
-
-function getEstimatedTime(qPos)
-{
-    var time = Math.floor(Math.floor(qPos*2*3*2 + ((qPos*2*3*3) - (qPos*2*3*2)) * Math.random()) * 0.01);
-    document.getElementById('queueTime').innerHTML = 'Estimated time: ' + time + ' min';
-}
-
-function doDisconnect()
-{
-    hideQueue();
-    showDisconnect();
-    playButtonAudio(1);
-    disconnected = true;
-    console.log("DC'd")
 }
 
 function manualChangeExpac()
@@ -166,14 +104,6 @@ function manualChangeExpac()
 
 function switchExpansion()
 {
-    if(disconnected)
-    {
-        disconnected = false;
-        hideQueue();
-        showDisconnect();
-    }
-    queuePos = null;
-    getPositionInQueue();
     var bg = document.getElementById('background');
     var bgWebM = bg.querySelector('source:nth-child(1)');
     var bgMp4 = bg.querySelector('source:nth-child(2)');
@@ -188,17 +118,16 @@ function switchExpansion()
     console.log(expName);
     audio.src = `${audioPath}/${expName}.ogg`;
     bgWebM.setAttribute('src', `${videoPath}/${expName}.webm`);
-    bgMp4.setAttribute('src', `${videoPath}/${expName}.mp4`);
+    bgMp4.setAttribute('src', `${videoPath}/${expName}.mp4`)
     logo.style.background = `url(${logoPath}/${expName}.png)`;
     version.textContent = verMap[expansion];
     date.textContent = dateMap[expansion];
     copyright.textContent = `Copyright 2004-${copyMap[expansion]} Blizzard Entertainment. All Right Reserved.`;
     setButtonColors(buttonColorMap[expansion]);
-
+    
     bg.load();
     bg.play();
     audio.play();
-
 }
 
 function playButtonAudio(index)
@@ -214,14 +143,6 @@ function playButtonAudio(index)
     buttonAudio.play();
 }
 
-function hideQueue()
-{
-    var x = document.getElementById("queue");
-    if(x.style.display === "none")
-        x.style.display = "flex";
-    else
-        x.style.display = "none";
-}
 
 function showDisconnect()
 {
@@ -232,12 +153,6 @@ function showDisconnect()
         x.style.display = "none";
 }
 
-function resetQueue()
-{
-    disconnected = false;
-    showDisconnect();
-    hideQueue();
-}
 
 function showSettings()
 {
@@ -273,14 +188,12 @@ function setButtonColors(index)
             quitButton.className = "button";
             optButton.className = "button";
             enterBtn.className = "button";
-            disconButton.className = "button";
         break;
 
         case 1:
             quitButton.className = "button_b";
             optButton.className = "button_b";
             enterBtn.className = "button_b";
-            disconButton.className = "button_b";
         break;
     }
 }
