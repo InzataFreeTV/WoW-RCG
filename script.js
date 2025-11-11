@@ -21,15 +21,6 @@ const genderSelect = document.getElementById('genderSelect');
 const genderLabel = document.getElementById('genderLabel');
 const genderContainer = document.getElementById('genderContainer');
 
-// --- PORTAL TRANSITION ---
-enterBtn.addEventListener('click', () => {
-  portalOverlay.classList.add('fade-out');
-  setTimeout(() => {
-    portalOverlay.classList.add('hidden');
-    generatorContainer.classList.remove('hidden');
-  }, FADE_OUT_DURATION);
-});
-
 // --- INCLUDE AUDIOHANDLER ---
 import('./assets/js/audiohandler.js').then(() => {
   // Audio handler loaded
@@ -38,7 +29,7 @@ import('./assets/js/audiohandler.js').then(() => {
 import { raceNameSyllables, accentedVariants } from './nameData.js';
 import { connectedRealms, notConnectedRealms, getRandomServer } from './servers.js';
 import { races, factions, classes } from './gameData.js';
-// connectedRealms is now an array of groups (each group = array of connected realms)
+// connectedRealms is an array of groups (each group = array of connected realms)
 const serverList = [...connectedRealms.flat(), ...notConnectedRealms];
 
 

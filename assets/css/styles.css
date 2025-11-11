@@ -5,6 +5,24 @@ html, body {
 	cursor: url('../img/ui/Point.png'), auto;
 }
 
+#portalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    transition: opacity 1s ease-out;
+}
+
+#portalOverlay.fade-out {
+    opacity: 0;
+}
+
+#portalOverlay.hidden {
+    display: none;
+}
+
 @font-face{
     font-family: 'FRIZQT';
     src: url('../fonts/FRIZQT__.ttf');
@@ -34,7 +52,7 @@ html, body {
     z-index: 2;
 }
 
-#queueTextContainer {
+#mainTextContainer {
     position: fixed;
     margin-bottom: 50px;
     background-color: transparent;
@@ -104,7 +122,7 @@ html, body {
     pointer-events: none;
 }
 
-.queueText {
+.mainText {
     font-family: 'FRIZQT';
     font-size: 22px;
     text-align: center;
@@ -325,3 +343,297 @@ html, body {
     border: none;
     z-index: 4;
 }
+
+/* Tooltip container */
+
+/* Main generator container */
+.container {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  padding-bottom: 56px; /* room for the fixed footer (adjust if you change footer height) */
+}
+
+/* Generator header */
+h1.generator-title {
+  margin-bottom: 30px;
+  font-size: 3rem;
+  text-shadow: 2px 2px 5px #000;
+  color: gold;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 150px;
+}
+
+label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: gold;
+  text-shadow: 1px 1px 2px #000;
+}
+
+/* Dropdowns styled with glow */
+select, input[type="checkbox"] {
+  padding: 6px 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 2px solid gold;
+  background: black;
+  color: gold;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+select:hover, input[type="checkbox"]:hover {
+  box-shadow: 0 0 10px gold;
+}
+
+/* Dropdown options */
+select option {
+  background: black;
+  color: gold;
+}
+
+/* Result */
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  background: rgba(0,0,0,0.6);
+  padding: 8px 15px;
+  border: 2px solid gold;
+  border-radius: 8px;
+  min-width: 300px;
+}
+
+/* Icons */
+.icon {
+  width: 40px;
+  height: 40px;
+}
+
+/* Tooltip */
+.tooltip {
+  position: relative;
+  /* keep positioning but don't force display.
+     This prevents overriding .result-row (which needs display:flex). */
+}
+
+/* helper: use this on elements that truly need inline-block */
+.tooltip-inline {
+  display: inline-block;
+}
+
+/* ensure result rows that also use .tooltip stay flex */
+.result-row.tooltip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: max-content;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px 10px;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Tooltip that follows the cursor for server connected-realms */
+.custom-server-tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: rgba(0,0,0,0.85);
+  color: #ffd700;
+  border: 1px solid gold;
+  padding: 6px 10px;
+  border-radius: 6px;
+  z-index: 9999;
+
+  /* allow normal wrapping into as many rows as needed */
+  white-space: normal;
+  max-width: 520px;
+  line-height: 1.25;
+  font-size: 0.95rem;
+
+  /* allow tall tooltips if necessary (won't block pointer events) */
+  max-height: 60vh;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  visibility: hidden;
+}
+
+.custom-server-tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* small footer note */
+.footer-note {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #cfcfcf;
+  margin-top: 12px;
+  opacity: 0.95;
+  user-select: none;
+
+  /* keep footer always at the bottom of the viewport */
+  position: fixed;
+  left: 0;
+  bottom: 8px;
+  width: 100%;
+  pointer-events: none; /* don't block clicks */
+  z-index: 1000;
+  background: transparent;
+  padding: 4px 8px;
+}
+
+/* small icon-style copy button placed inside the .result-row */
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin-left: 12px; /* default spacing */
+  border-radius: 5px;
+  border: none;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  cursor: pointer;
+  transition: background 120ms ease, transform 120ms ease;
+  user-select: none;
+  flex-shrink: 0;
+  position: relative; /* for the inline tooltip */
+}
+
+/* push the copy icon to the far right of the result row */
+.result-row .copy-btn {
+  margin-left: auto;
+}
+
+/* SVG sizing */
+.copy-btn svg {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+.copy-btn:hover {
+  background: rgba(255,255,255,0.10);
+  transform: translateY(-1px);
+}
+.copy-btn:disabled {
+  opacity: 0.8;
+  cursor: default;
+  transform: none;
+}
+
+/* small inline "Copied" tooltip shown above the icon when copy succeeds */
+.copy-btn .copied-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: rgba(0,0,0,0.9);
+  color: #ffd700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 140ms ease, transform 140ms ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  z-index: 100;
+}
+
+/* visible state */
+.copy-btn.copied .copied-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* small select button added to faction/race/class rows */
+.select-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;         /* minimal vertical padding */
+  height: 20px;           /* force compact height */
+  margin-left: 10px;
+  border-radius: 4px;
+  border: none;
+  background: rgba(255,255,255,0.04);
+  color: #ffd700;
+  cursor: pointer;
+  transition: background 120ms ease, transform 120ms ease;
+  flex-shrink: 0;
+
+  /* size by content but keep compact */
+  width: 40px;
+  min-width: 0;
+  line-height: 20px;
+  font-size: 0.65rem;     /* smaller text so button appears smaller */
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* keep the button visually on the far-right of the row */
+.result-row .select-btn {
+  margin-left: auto;
+  align-self: center;
+}
+
+/* hover / selected states (unchanged) */
+.select-btn:hover { background: rgba(255,255,255,0.07); transform: translateY(-1px); }
+.select-btn.selected {
+  background: rgba(255,215,0,0.14);
+  box-shadow: 0 0 8px rgba(255,215,0,0.12);
+}
+
+/* ensure select button doesn't push layout — keep it to the far right when used */
+.result-row { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
+.result-row > span:first-child { flex: 0 0 auto; }
+.result-row .char-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

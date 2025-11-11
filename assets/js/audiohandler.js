@@ -1,4 +1,4 @@
-var expansion = 9;
+var expansion = 8;
 
 var expansionMap = [
     'Vanilla',
@@ -10,6 +10,7 @@ var expansionMap = [
     'Legion',
     'BattleForAzeroth',
     'Shadowlands',
+    'Dragonflight',
     'TheWarWithin',
 ]
 
@@ -27,6 +28,7 @@ var verMap = [
     'Version 7.3.5 (26365) (Release x64)',
     'Version 8.3.7 (35662) (Release x64)',
     'Version 9.0.1 (35944) (Release x64)',
+    'Version 10.0.7 (53466) (Release x64)',
     'Version 11.0.2 (56033) (Release x64)'
 ];
 
@@ -40,6 +42,7 @@ var dateMap = [
     'Apr 3 2018',
     'Aug 24 2020',
     'Oct 13 2020',
+    'Feb 28 2024',
     'Aug 26 2024'
 ];
 
@@ -47,6 +50,7 @@ var buttonColorMap = [
     0,
     0,
     1,
+    0,
     0,
     0,
     0,
@@ -66,6 +70,7 @@ var copyMap = [
     2018,
     2020,
     2020,
+    2024,
     2024
 ];
 
@@ -151,7 +156,7 @@ function manualChangeExpac()
 {
     console.log("Changing xpac to: ");
     expansion += 1;
-    if(expansion > 9)
+    if(expansion > 8)
         expansion = 0;
 
     var bg = document.getElementById('background');
@@ -176,24 +181,24 @@ function switchExpansion()
     var version = document.getElementById('buildVersion');
     var date = document.getElementById('buildDate');
     var copyright = document.getElementById('copyrightText');
-    
+
     bg.pause();
     audio.pause();
     var expName = expansionMap[expansion];
     console.log(expName);
     audio.src = `${audioPath}/${expName}.ogg`;
     bgWebM.setAttribute('src', `${videoPath}/${expName}.webm`);
-    bgMp4.setAttribute('src', `${videoPath}/${expName}.mp4`)
+    bgMp4.setAttribute('src', `${videoPath}/${expName}.mp4`);
     logo.style.background = `url(${logoPath}/${expName}.png)`;
     version.textContent = verMap[expansion];
     date.textContent = dateMap[expansion];
     copyright.textContent = `Copyright 2004-${copyMap[expansion]} Blizzard Entertainment. All Right Reserved.`;
     setButtonColors(buttonColorMap[expansion]);
-    
+
     bg.load();
     bg.play();
     audio.play();
-    
+
 }
 
 function playButtonAudio(index)

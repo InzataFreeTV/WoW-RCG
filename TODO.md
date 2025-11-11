@@ -1,7 +1,8 @@
-- [ ] Copy assets from temp_wow_login to project
-- [ ] Update index.html to integrate login screen elements into portal overlay
-- [ ] Update style.css to include WoWLoginScreens styles
-- [x] Update script.js to include audiohandler and expansion logic
-- [ ] Modify portal behavior: make "Create" button hide portal and show generator
-- [x] Add War Within expansion to the arrays (bg, audio, etc.)
-- [ ] Test the updated portal
+# TODO: Fix Portal Logo Onclick Expansion Background Change
+
+## Steps to Complete:
+- [x] Change initial expansion value from 9 to 8 in assets/js/audiohandler.js
+- [x] Update the wrap condition from > 9 to > 8 in assets/js/audiohandler.js
+- [x] Test the fix by opening portal.html in browser and clicking the logo to verify background cycles through existing expansions
+
+## Completed Steps:
