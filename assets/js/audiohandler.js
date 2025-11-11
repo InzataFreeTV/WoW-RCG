@@ -260,21 +260,21 @@ function setButtonColors(index)
 {
     var quitButton = document.getElementById("quitButton");
     var optButton = document.getElementById("optButton");
-    var realmListButton = document.getElementById("realmListButton");
+    var enterBtn = document.getElementById("enterBtn");
     var disconButton = document.getElementById("disconButton");
     switch(index)
     {
         case 0:
             quitButton.className = "button";
             optButton.className = "button";
-            realmListButton.className = "button";
+            enterBtn.className = "button";
             disconButton.className = "button";
         break;
 
         case 1:
             quitButton.className = "button_b";
             optButton.className = "button_b";
-            realmListButton.className = "button_b";
+            enterBtn.className = "button_b";
             disconButton.className = "button_b";
         break;
     }
