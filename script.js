@@ -1,3 +1,7 @@
+// ============================================================================
+// WoW Random Character Generator - Main Script
+// ============================================================================
+
 // --- CONSTANTS ---
 const FADE_OUT_DURATION = 1000;
 const MAX_NAME_LENGTH = 12;
@@ -8,26 +12,22 @@ const GENDER_RANDOM_PROBABILITY = 0.5;
 const factionBackgrounds = {
   "Alliance": {
     mp4: "assets/img/bg/Shadowlands.mp4",
-    webm:"assets/img/bg/Shadowlands.webm",
-    poster:"assets/img/bg/Shadowlands.png"
+    webm: "assets/img/bg/Shadowlands.webm",
+    poster: "assets/img/bg/Shadowlands.png"
   },
   "Horde": {
     mp4: "assets/img/bg/Shadowlands.mp4",
-    webm:"assets/img/bg/Shadowlands.webm",
-    poster:"assets/img/bg/Shadowlands.png"
+    webm: "assets/img/bg/Shadowlands.webm",
+    poster: "assets/img/bg/Shadowlands.png"
   },
-  // fallback / neutral (optional)
   "Neutral": {
     mp4: "assets/img/bg/Shadowlands.mp4",
-    webm:"assets/img/bg/Shadowlands.webm",
-    poster:"assets/img/bg/Shadowlands.png"
+    webm: "assets/img/bg/Shadowlands.webm",
+    poster: "assets/img/bg/Shadowlands.png"
   }
 };
 
-// --- DOM CACHE ---
-const portalOverlay = document.getElementById('portalOverlay');
-const generatorContainer = document.getElementById('generatorContainer');
-const enterBtn = document.getElementById('enterBtn');
+// --- DOM ELEMENT REFERENCES ---
 const raceLock = document.getElementById('raceLock');
 const classLock = document.getElementById('classLock');
 const serverLock = document.getElementById('serverLock');
@@ -37,21 +37,17 @@ const result = document.getElementById('result');
 const generateNameCheckbox = document.getElementById('generateName');
 const includeAccents = document.getElementById('includeAccents');
 const genderSelect = document.getElementById('genderSelect');
-const genderLabel = document.getElementById('genderLabel');
 const genderContainer = document.getElementById('genderContainer');
 
-// Track selected faction (empty string = "Any"/"Neutral")
-let selectedFaction = "";
+// --- STATE ---
+let selectedFaction = ""; // Empty string = "Any"/"Neutral"
 
-// --- INCLUDE AUDIOHANDLER ---
-import('./assets/js/audiohandler.js').then(() => {
-  // Audio handler loaded
-});
-
+// --- IMPORTS ---
+import('./assets/js/audiohandler.js');
 import { raceNameSyllables, accentedVariants } from './nameData.js';
 import { connectedRealms, notConnectedRealms, getRandomServer } from './servers.js';
 import { races, factions, classes } from './gameData.js';
-// connectedRealms is an array of groups (each group = array of connected realms)
+
 const serverList = [...connectedRealms.flat(), ...notConnectedRealms];
 
 // Setup faction icon selection
@@ -75,9 +71,12 @@ if (factionIcons) {
   });
 }
 
-// Populate server dropdown (starts with Random option in HTML)
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+
+// Populate server dropdown (keep existing options from HTML, add all realms)
 if (serverLock) {
-  // keep existing "Don't Randomize" and "Random Server" options in HTML, then add all realms
   serverList.forEach(s => {
     const opt = document.createElement('option');
     opt.value = s;
@@ -85,7 +84,11 @@ if (serverLock) {
     serverLock.appendChild(opt);
   });
 }
-// ------------------- FILTERS -------------------
+
+// ============================================================================
+// FILTER FUNCTIONS
+// ============================================================================
+
 function updateFilters() {
   // selectedFaction is now a global variable
   const selectedRace = raceLock.value;
@@ -128,9 +131,14 @@ function updateFilters() {
   });
 }
 
+// Initialize filters on page load
 updateFilters();
 
-// Event listeners for filtering (factionLock removed, now handled by icon clicks)
+// ============================================================================
+// EVENT LISTENERS
+// ============================================================================
+
+// Filtering event listeners
 raceLock.addEventListener('change', updateFilters);
 classLock.addEventListener('change', updateFilters);
 
@@ -144,7 +152,10 @@ generateNameCheckbox.addEventListener('change', () => {
   }
 });
 
-// ------------------- GENERATION -------------------
+// ============================================================================
+// CHARACTER GENERATION
+// ============================================================================
+
 generateBtn.addEventListener('click', () => {
   // selectedFaction is now a global variable from icon selection
   const selectedRace = raceLock.value;
@@ -260,13 +271,14 @@ generateBtn.addEventListener('click', () => {
   }
 });
 
-// ------------------- DISPLAY -------------------
+// ============================================================================
+// DISPLAY FUNCTIONS
+// ============================================================================
+
 function displayResult(faction, raceObj, chosenClass, name) {
-  // clear previous result
   result.innerHTML = '';
 
-  // helper to create the standard icon + label row used for faction/race/class
-  // when selectTargetId is provided, a small button will set that select to value
+  // Helper function to create icon + label rows with optional "Lock" button
   const makeIconRow = (iconSrc, label, value, tooltipText, selectTargetId) => {
      const row = document.createElement('div');
      row.className = 'result-row icon-row tooltip';
@@ -418,7 +430,10 @@ function displayResult(faction, raceObj, chosenClass, name) {
   }
 }
 
-// ------------------- NAME GENERATION -------------------
+// ============================================================================
+// NAME GENERATION
+// ============================================================================
+
 function generateRaceName(race, withAccents, gender = "") {
   let syll = raceNameSyllables[race] || raceNameSyllables["Human"];
 
@@ -452,6 +467,10 @@ function applyAccents(name) {
     return ch;
   }).join('');
 }
+
+// ============================================================================
+// BACKGROUND MANAGEMENT
+// ============================================================================
 
 function applyFactionBackground(faction) {
   const bg = document.getElementById('background');

@@ -2,7 +2,7 @@ html, body {
     margin: 0;
     height: 100%;
     overflow: hidden;
-	cursor: url('../img/ui/Point.png'), auto;
+    cursor: url('../img/ui/Point.png'), auto;
 }
 
 #portalOverlay {
@@ -23,7 +23,7 @@ html, body {
     display: none;
 }
 
-@font-face{
+@font-face {
     font-family: 'FRIZQT';
     src: url('../fonts/FRIZQT__.ttf');
 }
@@ -95,7 +95,7 @@ html, body {
     font-size: 15px;
     text-align: left;
     color: #ffc700;
-    text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 3px #000;
+    text-shadow: 0 0 3px #000;
 }
 
 #buildDate {
@@ -104,8 +104,7 @@ html, body {
     font-size: 15px;
     text-align: left;
     color: #ffc700;
-    text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 3px #000;
-
+    text-shadow: 0 0 3px #000;
     bottom: -8px;
     left: 10px;
 }
@@ -116,8 +115,7 @@ html, body {
     font-size: 15px;
     text-align: left;
     color: #ffc700;
-    text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 3px #000;
-
+    text-shadow: 0 0 3px #000;
     bottom: 10px;
     left: 10px;
 }
@@ -137,7 +135,7 @@ html, body {
     font-size: 22px;
     text-align: center;
     color: #ffc700;
-    text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 3px #000, 10px 10px 2px #0000;
+    text-shadow: 0 0 3px #000;
 }
 
 .text {
@@ -145,7 +143,7 @@ html, body {
     font-size: 14px;
     text-align: left;
     color: #ffc700;
-    text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 3px #000, 10px 10px 2px #0000;
+    text-shadow: 0 0 3px #000;
 }
 
 .UIBox {
@@ -156,8 +154,7 @@ html, body {
     pointer-events: none;
 }
 
-.UIBoxBackground 
-{
+.UIBoxBackground {
     position: fixed;
     background-color: rgba(0, 0, 0, 0.75);
     z-index: 0;
@@ -169,8 +166,7 @@ html, body {
     font-size: 23px;
     text-align: center;
     color: #ffc700;
-    text-shadow: 0 0 8px #000, 0 0 8px #000, 0 0 8px #000, 0 0 8px #000, 0 0 8px #000;
-
+    text-shadow: 0 0 8px #000;
     background: url('../img/ui/buttons/button_idle.png') no-repeat top;
     width: 270px;
     height: 71px;
@@ -179,27 +175,19 @@ html, body {
     display: block;
     margin-top: -25px;
     transform: scale(0.8);
-    filter: drop-shadow(0px 0px 8px #000);
+    filter: drop-shadow(0 0 8px #000);
     z-index: 2;
-	cursor: url('../img/ui/Point.png'), auto;
+    cursor: url('../img/ui/Point.png'), auto;
 }
 
 .button:hover {
-    font-family: 'FRIZQT';
-    text-align: center;
     color: #ffffff;
-    text-shadow: 0 0 8px #000, 0 0 8px #000, 0 0 8px #000, 0 0 8px #000, 0 0 8px #000;
-
     background: url('../img/ui/buttons/button_hover.png') no-repeat top;
 }
 
 .button:active {
-    font-family: 'FRIZQT';
     font-size: 22px;
-    text-align: center;
     color: #ffffff;
-    text-shadow: 0 0 8px #000, 0 0 8px #000, 0 0 8px #000, 0 0 8px #000, 0 0 8px #000;
-
     background: url('../img/ui/buttons/button_pressed.png') no-repeat top;
 }
 
@@ -208,8 +196,7 @@ html, body {
     font-size: 23px;
     text-align: center;
     color: #ffc700;
-    text-shadow: 0 0 8px #000, 0 0 8px #000, 0 0 8px #000, 0 0 8px #000, 0 0 8px #000;
-
+    text-shadow: 0 0 8px #000;
     background: url('../img/ui/buttons/button_idle_b.png') no-repeat top;
     width: 270px;
     height: 71px;
@@ -218,27 +205,19 @@ html, body {
     display: block;
     margin-top: -25px;
     transform: scale(0.8);
-    filter: drop-shadow(0px 0px 8px #000);
+    filter: drop-shadow(0 0 8px #000);
     z-index: 2;
-	cursor: url('../img/ui/Point.png'), auto;
+    cursor: url('../img/ui/Point.png'), auto;
 }
 
 .button_b:hover {
-    font-family: 'FRIZQT';
-    text-align: center;
     color: #ffffff;
-    text-shadow: 0 0 8px #000, 0 0 8px #000, 0 0 8px #000, 0 0 8px #000, 0 0 8px #000;
-
     background: url('../img/ui/buttons/button_hover_b.png') no-repeat top;
 }
 
 .button_b:active {
-    font-family: 'FRIZQT';
     font-size: 22px;
-    text-align: center;
     color: #ffffff;
-    text-shadow: 0 0 8px #000, 0 0 8px #000, 0 0 8px #000, 0 0 8px #000, 0 0 8px #000;
-
     background: url('../img/ui/buttons/button_pressed_b.png') no-repeat top;
 }
 
