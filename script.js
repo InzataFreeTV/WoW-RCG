@@ -31,7 +31,7 @@ const enterBtn = document.getElementById('enterBtn');
 const raceLock = document.getElementById('raceLock');
 const classLock = document.getElementById('classLock');
 const serverLock = document.getElementById('serverLock');
-const factionLock = document.getElementById('factionLock');
+const factionIcons = document.getElementById('factionIcons');
 const generateBtn = document.getElementById('generateBtn');
 const result = document.getElementById('result');
 const generateNameCheckbox = document.getElementById('generateName');
@@ -39,6 +39,9 @@ const includeAccents = document.getElementById('includeAccents');
 const genderSelect = document.getElementById('genderSelect');
 const genderLabel = document.getElementById('genderLabel');
 const genderContainer = document.getElementById('genderContainer');
+
+// Track selected faction (empty string = "Any"/"Neutral")
+let selectedFaction = "";
 
 // --- INCLUDE AUDIOHANDLER ---
 import('./assets/js/audiohandler.js').then(() => {
@@ -51,16 +54,26 @@ import { races, factions, classes } from './gameData.js';
 // connectedRealms is an array of groups (each group = array of connected realms)
 const serverList = [...connectedRealms.flat(), ...notConnectedRealms];
 
-
-
-// Populate faction dropdown
-factionLock.innerHTML = '<option value="">Any</option>';
-factions.forEach(f => {
-  const opt = document.createElement('option');
-  opt.value = f.name;
-  opt.textContent = f.name;
-  factionLock.appendChild(opt);
-});
+// Setup faction icon selection
+if (factionIcons) {
+  const icons = factionIcons.querySelectorAll('.faction-icon');
+  icons.forEach(icon => {
+    icon.addEventListener('click', () => {
+      // Remove selected from all icons
+      icons.forEach(i => i.classList.remove('selected'));
+      // Add selected to clicked icon
+      icon.classList.add('selected');
+      // Update selected faction value
+      selectedFaction = icon.getAttribute('data-faction');
+      // Update filters
+      updateFilters();
+      // Play audio
+      if (typeof playButtonAudio === 'function') {
+        playButtonAudio(0);
+      }
+    });
+  });
+}
 
 // Populate server dropdown (starts with Random option in HTML)
 if (serverLock) {
@@ -74,7 +87,7 @@ if (serverLock) {
 }
 // ------------------- FILTERS -------------------
 function updateFilters() {
-  const selectedFaction = factionLock.value;
+  // selectedFaction is now a global variable
   const selectedRace = raceLock.value;
   const selectedClass = classLock.value;
 
@@ -117,8 +130,7 @@ function updateFilters() {
 
 updateFilters();
 
-// Event listeners for filtering
-factionLock.addEventListener('change', updateFilters);
+// Event listeners for filtering (factionLock removed, now handled by icon clicks)
 raceLock.addEventListener('change', updateFilters);
 classLock.addEventListener('change', updateFilters);
 
@@ -134,7 +146,7 @@ generateNameCheckbox.addEventListener('change', () => {
 
 // ------------------- GENERATION -------------------
 generateBtn.addEventListener('click', () => {
-  const selectedFaction = factionLock.value;
+  // selectedFaction is now a global variable from icon selection
   const selectedRace = raceLock.value;
   const selectedClass = classLock.value;
   const selectedGender = genderSelect.value;
@@ -289,19 +301,32 @@ function displayResult(faction, raceObj, chosenClass, name) {
       // click handler: set select value and dispatch change so any listeners run
       selBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const target = document.getElementById(selectTargetId);
-        if (!target) return;
-        // only set if option exists; otherwise try to add it
-        const opt = Array.from(target.options).find(o => o.value === value);
-        if (!opt) {
-          const newOpt = document.createElement('option');
-          newOpt.value = value;
-          newOpt.textContent = value;
-          target.appendChild(newOpt);
+        
+        // Special handling for faction icons
+        if (selectTargetId === 'factionLock') {
+          // Find and click the appropriate faction icon
+          const icons = factionIcons.querySelectorAll('.faction-icon');
+          icons.forEach(icon => {
+            if (icon.getAttribute('data-faction') === value) {
+              icon.click();
+            }
+          });
+        } else {
+          // Original dropdown behavior for race/class
+          const target = document.getElementById(selectTargetId);
+          if (!target) return;
+          // only set if option exists; otherwise try to add it
+          const opt = Array.from(target.options).find(o => o.value === value);
+          if (!opt) {
+            const newOpt = document.createElement('option');
+            newOpt.value = value;
+            newOpt.textContent = value;
+            target.appendChild(newOpt);
+          }
+          target.value = value;
+          // dispatch change so UI updates/reactive logic runs
+          target.dispatchEvent(new Event('change', { bubbles: true }));
         }
-        target.value = value;
-        // dispatch change so UI updates/reactive logic runs
-        target.dispatchEvent(new Event('change', { bubbles: true }));
 
         // visual feedback on button
         selBtn.classList.add('selected');

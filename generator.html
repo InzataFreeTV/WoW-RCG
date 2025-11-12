@@ -27,8 +27,18 @@
         <div class="left-panel">
           <div class="controls" aria-controls="result">
             <div class="control-group">
-              <label for="factionLock">Faction:</label>
-              <select id="factionLock"></select>
+              <label></label>
+              <div class="faction-icons" id="factionIcons">
+                <div class="faction-icon selected" data-faction="" title="Neutral (Any)">
+                  <img src="icons/factions/neutral.png" alt="Neutral" style="opacity: 0.8; filter: grayscale(30%);">
+                </div>
+                <div class="faction-icon" data-faction="Horde" title="Horde">
+                  <img src="icons/factions/horde.png" alt="Horde">
+                </div>
+                <div class="faction-icon" data-faction="Alliance" title="Alliance">
+                  <img src="icons/factions/alliance.png" alt="Alliance">
+                </div>
+              </div>
             </div>
             <div class="control-group">
               <label for="raceLock">Race:</label>
@@ -37,6 +47,15 @@
             <div class="control-group">
               <label for="classLock">Class:</label>
               <select id="classLock"></select>
+            </div>
+
+            <div class="control-group hidden" id="genderContainer">
+              <label for="genderSelect" id="genderLabel">Gender:</label>
+              <select id="genderSelect">
+                <option value="">Any</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
             </div>
 
             <div class="control-group">
@@ -53,15 +72,6 @@
                 <span class="checkbox-box" aria-hidden="true"></span>
                 <span class="checkbox-text">Include Accents</span>
               </label>
-            </div>
-
-            <div class="control-group hidden" id="genderContainer">
-              <label for="genderSelect" id="genderLabel">Gender:</label>
-              <select id="genderSelect">
-                <option value="">Any</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
             </div>
 
             <div class="control-group">
