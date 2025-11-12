@@ -248,6 +248,7 @@ html, body {
     flex-direction: column;
     justify-content:center;
     align-items:center;
+    position: relative; /* allow absolute positioning of children if needed */
 }
 
 .fullWidth
@@ -388,6 +389,29 @@ html, body {
   flex-direction: column;
   align-items: center;
   min-width: 150px;
+}
+
+/* make a control-group display inline (label left, control right) */
+.control-group.row {
+  flex-direction: row;        /* horizontal */
+  align-items: center;       /* vertically center label + control */
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+/* make the label a fixed-width column on the left */
+.control-group.row > label {
+  margin-bottom: 0;          /* remove vertical spacing used in column layout */
+  min-width: 90px;          /* control how far left the label is; adjust as needed */
+  text-align: right;        /* align label text to the right, closer to select */
+  font-weight: bold;
+  color: gold;
+}
+
+/* allow the select to expand to remaining space if needed */
+.control-group.row > select {
+  min-width: 160px;         /* ensure dropdown has decent width */
+  width: auto;
 }
 
 label {
@@ -690,19 +714,133 @@ input[type="checkbox"]:hover {
     cursor: url('../img/ui/Cast.png'), auto;
 }
 
-/* UI buttons inside the box */
-.ui-buttons {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 20px;
-    z-index: 3;
+/* --- Generator two-column layout + result gold styling --- */
+
+/* Container that holds left controls and right result */
+.generator-ui {
+  position: absolute;
+  top: 220px;                  /* adjust vertically if needed */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 840px;                /* total width for the two columns */
+  max-width: calc(100% - 40px);
+  display: flex;
+  gap: 20px;
+  z-index: 3;
+  align-items: flex-start;
+  pointer-events: auto;
+  box-sizing: border-box;
 }
 
-/* keep layout usable on small screens */
-@media (max-width: 800px) {
-  .controls { top: 140px; gap: 10px; }
-  .result { top: 300px; min-width: 260px; }
+/* Left & right panels */
+.generator-ui .left-panel {
+  width: 46%;
+  min-width: 260px;
+  box-sizing: border-box;
+  padding: 8px;
 }
+.generator-ui .right-panel {
+  width: 54%;
+  min-width: 300px;
+  box-sizing: border-box;
+  padding: 8px;
+}
+
+/* Make the controls flow inside the left-panel */
+.controls {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  margin: 0;
+  align-items: stretch;
+  gap: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+/* Result area flows in right panel */
+.result {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+  color: #ffd700;              /* gold text for the whole result area */
+  text-shadow: 0 0 3px #000;
+}
+
+/* Ensure each result-row inherits gold and keeps its look */
+.result-row {
+  color: inherit !important;
+  background: rgba(0,0,0,0.6);
+  border: 2px solid gold;
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Make sure labels/values inside result use gold color */
+.result-row strong,
+.result-row span {
+  color: inherit;
+}
+
+/* Right-align copy/select buttons inside result rows */
+.result-row .copy-btn,
+.result-row .select-btn {
+  margin-left: auto;
+}
+
+/* Responsive: stack on smaller screens */
+@media (max-width: 900px) {
+  .generator-ui {
+    position: static;
+    transform: none;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .generator-ui .left-panel,
+  .generator-ui .right-panel {
+    width: 100%;
+    min-width: 0;
+  }
+  .controls {
+    align-items: center;
+  }
+  .result {
+    align-items: center;
+  }
+}
+
+/* Make generator-centered area a positioning context (only inside the generator overlay) */
+#generatorOverlay .centered {
+  position: relative;
+}
+
+/* Place the Generate button at the bottom-center of the UI box */
+#generatorOverlay .ui-buttons {
+  position: absolute;
+  bottom: 28px;               /* adjust this value to move the button higher/lower */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;                 /* above UI box but below other foreground items if needed */
+  pointer-events: auto;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* If you want the button to be slightly larger or scaled, tweak here */
+/* #generatorOverlay .ui-buttons .button { transform: scale(0.85); } */
+

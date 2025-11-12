@@ -20,62 +20,82 @@
       <div class="UIBox" style="width: 800px; height: 500px;"></div>
       <div class="UIBoxBackground" style="width: 850px; height: 550px;"></div>
 
-      <div class="controls">
-        <div class="control-group">
-          <label for="factionLock">Faction:</label>
-          <select id="factionLock"></select>
-        </div>
-        <div class="control-group">
-          <label for="raceLock">Race:</label>
-          <select id="raceLock"></select>
-        </div>
-        <div class="control-group">
-          <label for="classLock">Class:</label>
-          <select id="classLock"></select>
+      <!-- TWO-COLUMN GENERATOR UI -->
+      <div class="generator-ui" role="region" aria-label="Generator UI">
+
+        <!-- LEFT PANEL: controls -->
+        <div class="left-panel">
+          <div class="controls" aria-controls="result">
+            <div class="control-group">
+              <label for="factionLock">Faction:</label>
+              <select id="factionLock"></select>
+            </div>
+            <div class="control-group">
+              <label for="raceLock">Race:</label>
+              <select id="raceLock"></select>
+            </div>
+            <div class="control-group">
+              <label for="classLock">Class:</label>
+              <select id="classLock"></select>
+            </div>
+
+            <div class="control-group">
+              <label class="wow-checkbox">
+                <input type="checkbox" id="generateName" />
+                <span class="checkbox-box" aria-hidden="true"></span>
+                <span class="checkbox-text">Generate Name</span>
+              </label>
+            </div>
+
+            <div class="control-group">
+              <label class="wow-checkbox">
+                <input type="checkbox" id="includeAccents" />
+                <span class="checkbox-box" aria-hidden="true"></span>
+                <span class="checkbox-text">Include Accents</span>
+              </label>
+            </div>
+
+            <div class="control-group">
+              <label for="serverLock">Server:</label>
+              <select id="serverLock">
+                <option value="none" selected>Don't Randomize</option>
+                <option value="random">Random Server</option>
+              </select>
+            </div>
+
+            <div class="control-group hidden" id="genderContainer">
+              <label for="genderSelect" id="genderLabel">Gender:</label>
+              <select id="genderSelect">
+                <option value="">Any</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        <div class="control-group">
-          <label for="generateName">Generate Name:</label>
-          <input type="checkbox" id="generateName" class="checkbox">
+        <!-- RIGHT PANEL: result -->
+        <div class="right-panel">
+          <div id="result" class="result" aria-live="polite"></div>
         </div>
 
-        <div class="control-group">
-          <label for="includeAccents">Include Accents:</label>
-          <input type="checkbox" id="includeAccents" class="checkbox" disabled>
-        </div>
-
-        <div class="control-group">
-          <label for="serverLock">Server:</label>
-          <select id="serverLock">
-            <option value="none" selected>Don't Randomize</option>
-            <option value="random">Random Server</option>
-          </select>
-        </div>
-
-        <div class="control-group hidden" id="genderContainer">
-          <label for="genderSelect" id="genderLabel">Gender:</label>
-          <select id="genderSelect">
-            <option value="">Any</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </div>
       </div>
+      <!-- END generator-ui -->
 
-      <div id="result" class="result"></div>
-
-      <!-- GENERATE BUTTON INSIDE UI BOX -->
+      <!-- MOVE: Generate button returned to original centered UI box location -->
       <div class="ui-buttons">
         <button class="button" id="generateBtn">Generate</button>
       </div>
+
     </div>
+    <!-- END centered -->
 
     <!-- FOOTER NOTE -->
     <div class="footer-note">
       World of Warcraft is a trademark or registered trademark of Blizzard Entertainment. This is a fan-made tool.
     </div>
 
-    <!-- BACKGROUND -->
+    <!-- BACKGROUND (video) -->
     <div class="fullScreen">
       <div class="centered">
         <video autoplay muted="true" loop id="background">
@@ -87,6 +107,7 @@
 
   </div>
 
+  <!-- app script -->
   <script type="module" src="script.js"></script>
 </body>
 </html>
