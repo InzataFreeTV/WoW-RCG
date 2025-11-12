@@ -39,6 +39,9 @@ html, body {
 
 #background {
     background-color: #000;
+    background-image: url('../img/bg/Shadowlands.png');
+    background-size: cover;
+    background-position: center;
     position: fixed;
     min-width: 100%;
     min-height: 100%;
@@ -48,6 +51,13 @@ html, body {
 #quitButtonContainer {
     bottom: 10px;
     right: 10px;
+    position: absolute;
+    z-index: 2;
+}
+
+#backButtonContainer {
+    bottom: 10px;
+    left: 10px;
     position: absolute;
     z-index: 2;
 }
@@ -357,21 +367,20 @@ html, body {
   cursor: url('../img/ui/Point.png'), auto;
 }
 
-/* Generator header */
-h1.generator-title {
-  margin-bottom: 30px;
-  font-size: 3rem;
-  text-shadow: 2px 2px 5px #000;
-  color: gold;
-}
 
 /* Controls */
 .controls {
+  position: absolute;
+  /* move controls lower so dropdowns/checkboxes sit below the portal/header */
+  top: 220px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 15px;
   margin-bottom: 30px;
+  z-index: 3;
 }
 
 .control-group {
@@ -388,8 +397,45 @@ label {
   text-shadow: 1px 1px 2px #000;
 }
 
-/* Dropdowns styled with glow */
-select, input[type="checkbox"] {
+/* Dropdowns styled like WoW UI elements */
+select {
+  padding: 4px 6px;
+  font-size: 1rem;
+  border: 16px solid;
+  border-image: url('../img/ui/UI_BorderAtlas.png') 40% round;
+  background: rgba(0, 0, 0, 0.75);
+  color: gold;
+  outline: none;
+  cursor: url('../img/ui/Point.png'), auto;
+  transition: all 0.3s;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gold"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 12px;
+  padding-right: 20px;
+}
+
+select:hover {
+  box-shadow: 0 0 10px gold;
+  cursor: url('../img/ui/Point.png'), auto;
+}
+
+/* Dropdown options */
+select option {
+  background: rgba(0, 0, 0, 0.9);
+  color: gold;
+  cursor: url('../img/ui/Point.png'), auto;
+  padding: 8px;
+  border: 8px solid;
+  border-image: url('../img/ui/UI_BorderAtlas.png') 40% round;
+  margin: 2px;
+}
+
+/* Checkbox styling (keep separate) */
+input[type="checkbox"] {
   padding: 6px 10px;
   font-size: 1rem;
   border-radius: 5px;
@@ -397,29 +443,28 @@ select, input[type="checkbox"] {
   background: black;
   color: gold;
   outline: none;
-  cursor: url('../img/ui/Point.png'), auto;
+  cursor: url('../img/ui/Cast.png'), auto;
   transition: all 0.3s;
 }
 
-select:hover, input[type="checkbox"]:hover {
+input[type="checkbox"]:hover {
   box-shadow: 0 0 10px gold;
-  cursor: url('../img/ui/Point.png'), auto;
-}
-
-/* Dropdown options */
-select option {
-  background: black;
-  color: gold;
-  cursor: url('../img/ui/Point.png'), auto;
+  cursor: url('../img/ui/Cast.png'), auto;
 }
 
 /* Result */
 .result {
+  position: absolute;
+  /* move results further down to sit below controls */
+  top: 450px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 15px;
   margin-top: 20px;
+  z-index: 3;
 }
 
 .result-row {
@@ -643,4 +688,21 @@ select option {
 
 .checkbox {
     cursor: url('../img/ui/Cast.png'), auto;
+}
+
+/* UI buttons inside the box */
+.ui-buttons {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 3;
+}
+
+/* keep layout usable on small screens */
+@media (max-width: 800px) {
+  .controls { top: 140px; gap: 10px; }
+  .result { top: 300px; min-width: 260px; }
 }

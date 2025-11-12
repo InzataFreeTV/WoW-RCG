@@ -7,20 +7,20 @@ const GENDER_RANDOM_PROBABILITY = 0.5;
 
 const factionBackgrounds = {
   "Alliance": {
-    mp4: "assets/video/alliance_creation.mp4",
-    webm:"assets/video/alliance_creation.webm",
-    poster:"assets/img/bg/alliance_creation.png"
+    mp4: "assets/img/bg/Shadowlands.mp4",
+    webm:"assets/img/bg/Shadowlands.webm",
+    poster:"assets/img/bg/Shadowlands.png"
   },
   "Horde": {
-    mp4: "assets/video/horde_creation.mp4",
-    webm:"assets/video/horde_creation.webm",
-    poster:"assets/img/bg/horde_creation.png"
+    mp4: "assets/img/bg/Shadowlands.mp4",
+    webm:"assets/img/bg/Shadowlands.webm",
+    poster:"assets/img/bg/Shadowlands.png"
   },
   // fallback / neutral (optional)
   "Neutral": {
-    mp4: "assets/video/neutral_creation.mp4",
-    webm:"assets/video/neutral_creation.webm",
-    poster:"assets/img/bg/neutral_creation.png"
+    mp4: "assets/img/bg/Shadowlands.mp4",
+    webm:"assets/img/bg/Shadowlands.webm",
+    poster:"assets/img/bg/Shadowlands.png"
   }
 };
 
@@ -434,14 +434,25 @@ function applyFactionBackground(faction) {
 
   const entry = factionBackgrounds[faction];
   if (!entry) {
-    // clear/background fallback
+    // fallback to default Shadowlands background
     if (bg.tagName && bg.tagName.toLowerCase() === 'video') {
-      try { bg.pause(); } catch(e){}
-      while (bg.firstChild) bg.removeChild(bg.firstChild);
-      bg.removeAttribute('src');
+      let webmSrc = bg.querySelector('source[type="video/webm"]');
+      let mp4Src = bg.querySelector('source[type="video/mp4"]');
+
+      if (!webmSrc) { webmSrc = document.createElement('source'); webmSrc.type = 'video/webm'; bg.appendChild(webmSrc); }
+      if (!mp4Src) { mp4Src = document.createElement('source'); mp4Src.type = 'video/mp4'; bg.appendChild(mp4Src); }
+
+      webmSrc.src = 'assets/img/bg/Shadowlands.webm';
+      mp4Src.src = 'assets/img/bg/Shadowlands.mp4';
+
+      try { bg.removeAttribute('src'); } catch(e){}
       try { bg.load(); } catch(e){}
+      bg.muted = true;
+      bg.play().catch(()=>{});
     } else {
-      bg.style.backgroundImage = '';
+      bg.style.backgroundImage = `url("assets/img/bg/Shadowlands.png")`;
+      bg.style.backgroundSize = 'cover';
+      bg.style.backgroundPosition = 'center';
     }
     return;
   }

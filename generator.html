@@ -8,58 +8,83 @@
 </head>
 <body>
 
-  <!-- Main container -->
-  <div class="container" id="generatorContainer">
+  <div class="noSelect" id="generatorOverlay">
+
+    <!-- BACK BUTTON -->
+    <div id="backButtonContainer" class="foreground">
+      <button class="button" onclick="window.location.href='portal.html'; playButtonAudio(0);">Back</button>
+    </div>
+
+    <!-- MAIN GENERATOR BOX -->
+    <div class="centered">
+      <div class="UIBox" style="width: 800px; height: 500px;"></div>
+      <div class="UIBoxBackground" style="width: 850px; height: 550px;"></div>
+
+      <div class="controls">
+        <div class="control-group">
+          <label for="factionLock">Faction:</label>
+          <select id="factionLock"></select>
+        </div>
+        <div class="control-group">
+          <label for="raceLock">Race:</label>
+          <select id="raceLock"></select>
+        </div>
+        <div class="control-group">
+          <label for="classLock">Class:</label>
+          <select id="classLock"></select>
+        </div>
+
+        <div class="control-group">
+          <label for="generateName">Generate Name:</label>
+          <input type="checkbox" id="generateName" class="checkbox">
+        </div>
+
+        <div class="control-group">
+          <label for="includeAccents">Include Accents:</label>
+          <input type="checkbox" id="includeAccents" class="checkbox" disabled>
+        </div>
+
+        <div class="control-group">
+          <label for="serverLock">Server:</label>
+          <select id="serverLock">
+            <option value="none" selected>Don't Randomize</option>
+            <option value="random">Random Server</option>
+          </select>
+        </div>
+
+        <div class="control-group hidden" id="genderContainer">
+          <label for="genderSelect" id="genderLabel">Gender:</label>
+          <select id="genderSelect">
+            <option value="">Any</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="result" class="result"></div>
+
+      <!-- GENERATE BUTTON INSIDE UI BOX -->
+      <div class="ui-buttons">
+        <button class="button" id="generateBtn">Generate</button>
+      </div>
+    </div>
+
+    <!-- FOOTER NOTE -->
     <div class="footer-note">
       World of Warcraft is a trademark or registered trademark of Blizzard Entertainment. This is a fan-made tool.
     </div>
-    <h1>World of Warcraft Character Generator</h1>
 
-    <div class="controls">
-      <div class="control-group">
-        <label for="factionLock">Faction:</label>
-        <select id="factionLock"></select>
+    <!-- BACKGROUND -->
+    <div class="fullScreen">
+      <div class="centered">
+        <video autoplay muted="true" loop id="background">
+          <source src="assets/img/bg/Shadowlands.webm" type="video/webm">
+          <source src="assets/img/bg/Shadowlands.mp4" type="video/mp4">
+        </video>
       </div>
-      <div class="control-group">
-        <label for="raceLock">Race:</label>
-        <select id="raceLock"></select>
-      </div>
-      <div class="control-group">
-        <label for="classLock">Class:</label>
-        <select id="classLock"></select>
-      </div>
-
-      <div class="control-group">
-        <label for="generateName">Generate Name:</label>
-        <input type="checkbox" id="generateName" class="checkbox">
-      </div>
-
-      <div class="control-group">
-        <label for="includeAccents">Include Accents:</label>
-        <input type="checkbox" id="includeAccents" class="checkbox" disabled>
-      </div>
-
-      <div class="control-group">
-        <label for="serverLock">Server:</label>
-        <select id="serverLock">
-          <option value="none" selected>Don't Randomize</option>
-          <option value="random">Random Server</option>
-        </select>
-      </div>
-
-      <div class="control-group hidden" id="genderContainer">
-        <label for="genderSelect" id="genderLabel">Gender:</label>
-        <select id="genderSelect">
-          <option value="">Any</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-        </select>
-      </div>
-
-      <button class="button" id="generateBtn">Generate</button>
     </div>
 
-    <div id="result" class="result"></div>
   </div>
 
   <script type="module" src="script.js"></script>
