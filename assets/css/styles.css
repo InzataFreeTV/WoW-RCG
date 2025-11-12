@@ -719,7 +719,7 @@ input[type="checkbox"]:hover {
 /* Container that holds left controls and right result */
 .generator-ui {
   position: absolute;
-  top: 220px;                  /* adjust vertically if needed */
+  top: 200px;                  /* adjust vertically if needed */
   left: 50%;
   transform: translateX(-50%);
   width: 840px;                /* total width for the two columns */
@@ -772,20 +772,21 @@ input[type="checkbox"]:hover {
   flex-direction: column;
   gap: 12px;
   align-items: stretch;
-  color: #ffd700;              /* gold text for the whole result area */
+  color: #ffd700;              
   text-shadow: 0 0 3px #000;
 }
 
-/* Ensure each result-row inherits gold and keeps its look */
+/* Ensure each result-row uses UI box styling */
 .result-row {
   color: inherit !important;
-  background: rgba(0,0,0,0.6);
-  border: 2px solid gold;
-  border-radius: 8px;
-  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.75);
+  border: 20px solid;
+  border-image: url('../img/ui/UI_BorderAtlas.png') 40% round;
+  padding: 12px 16px;
   display: flex;
   align-items: center;
   gap: 10px;
+  position: relative;
 }
 
 /* Make sure labels/values inside result use gold color */
