@@ -246,7 +246,6 @@ select {
 
 select:hover {
   box-shadow: 0 0 10px gold;
-  cursor: url('../img/ui/Point.png'), auto;
 }
 
 /* Dropdown options */
@@ -275,19 +274,11 @@ input[type="checkbox"] {
 
 input[type="checkbox"]:hover {
   box-shadow: 0 0 10px gold;
-  cursor: url('../img/ui/Cast.png'), auto;
 }
 
 /* Tooltip */
 .tooltip {
   position: relative;
-  /* keep positioning but don't force display.
-     This prevents overriding .result-row (which needs display:flex). */
-}
-
-/* helper: use this on elements that truly need inline-block */
-.tooltip-inline {
-  display: inline-block;
 }
 
 .tooltip .tooltiptext {
