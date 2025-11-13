@@ -64,11 +64,11 @@
 
 /* small footer note */
 .footer-note {
+  font-family: 'FRIZQT';
+  font-size: 15px;
   text-align: center;
-  font-size: 0.85rem;
-  color: #cfcfcf;
-  margin-top: 12px;
-  opacity: 0.95;
+  color: #ffc700;
+  text-shadow: 0 0 3px #000;
   user-select: none;
 
   /* keep footer always at the bottom of the viewport */

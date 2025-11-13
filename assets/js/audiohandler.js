@@ -122,7 +122,7 @@ function switchExpansion()
     logo.style.background = `url(${logoPath}/${expName}.png)`;
     version.textContent = verMap[expansion];
     date.textContent = dateMap[expansion];
-    copyright.textContent = `Copyright 2004-${copyMap[expansion]} Blizzard Entertainment. All Right Reserved.`;
+    copyright.textContent = `2004-${copyMap[expansion]} World of Warcraft is a trademark or registered trademark of Blizzard Entertainment. This is a fan-made tool.`;
     setButtonColors(buttonColorMap[expansion]);
     
     bg.load();
