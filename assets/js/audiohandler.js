@@ -1,4 +1,4 @@
-var expansion = 8;
+var expansion = 11;
 
 var expansionMap = [
     'Vanilla',
@@ -10,6 +10,9 @@ var expansionMap = [
     'Legion',
     'BattleForAzeroth',
     'Shadowlands',
+    'Dragonflight',
+    'TheWarWithin',
+    'Midnight',
 ]
 
 var audioPath = './assets/audio';
@@ -25,7 +28,10 @@ var verMap = [
     'Version 6.2.0 (20173) (Release x64)',
     'Version 7.3.5 (26365) (Release x64)',
     'Version 8.3.7 (35662) (Release x64)',
-    'Version 9.0.1 (35944) (Release x64)'
+    'Version 9.0.1 (35944) (Release x64)',
+    'Version 10.0.2 (Release x64)',
+    'Version 11.0.0 (Release x64)',
+    'Version 12.0.0 (Release x64)'
 ];
 
 var dateMap = [
@@ -37,13 +43,19 @@ var dateMap = [
     'Jun 20 2015',
     'Apr 3 2018',
     'Aug 24 2020',
-    'Oct 13 2020'
+    'Oct 13 2020',
+    'Nov 28 2022',
+    'Aug 26 2024',
+    'February 6 2026'
 ];
 
 var buttonColorMap = [
     0,
     0,
     1,
+    0,
+    0,
+    0,
     0,
     0,
     0,
@@ -61,7 +73,10 @@ var copyMap = [
     2015,
     2018,
     2020,
-    2020
+    2020,
+    2022,
+    2024,
+    2026
 ];
 
 var cursor;
@@ -94,7 +109,7 @@ function manualChangeExpac()
 {
     console.log("Changing xpac to: ");
     expansion += 1;
-    if(expansion > 8)
+    if(expansion >= expansionMap.length)
         expansion = 0;
 
     var bg = document.getElementById('background');
