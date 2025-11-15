@@ -113,7 +113,7 @@ function manualChangeExpac()
         expansion = 0;
 
     var bg = document.getElementById('background');
-    bg.muted = false;
+    bg.muted = true;
     switchExpansion();
 }
 
@@ -127,6 +127,7 @@ function switchExpansion()
     var date = document.getElementById('buildDate');
     var copyright = document.getElementById('copyrightText');
 
+    bg.muted = true;
     bg.pause();
     audio.pause();
     var expName = expansionMap[expansion];
