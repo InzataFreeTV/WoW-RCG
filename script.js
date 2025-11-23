@@ -38,9 +38,12 @@ const generateNameCheckbox = document.getElementById('generateName');
 const includeAccents = document.getElementById('includeAccents');
 const genderSelect = document.getElementById('genderSelect');
 const genderContainer = document.getElementById('genderContainer');
+const randomAllBtn = document.getElementById('randomAllBtn');
+const generationCounter = document.getElementById('counterValue');
 
 // --- STATE ---
 let selectedFaction = ""; // Empty string = "Any"/"Neutral"
+let generationCount = 0;
 
 // --- IMPORTS ---
 import('./assets/js/audiohandler.js');
@@ -72,8 +75,57 @@ if (factionIcons) {
 }
 
 // ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+function showError(message) {
+  if (result) {
+    result.innerHTML = `<div class="error-message" role="alert">
+      <strong>⚠ Error:</strong> ${message}
+    </div>`;
+  }
+  console.error('Generator Error:', message);
+}
+
+function updateGenerationCount() {
+  generationCount++;
+  if (generationCounter) {
+    generationCounter.textContent = generationCount;
+    generationCounter.parentElement.classList.add('pulse');
+    setTimeout(() => {
+      if (generationCounter && generationCounter.parentElement) {
+        generationCounter.parentElement.classList.remove('pulse');
+      }
+    }, 500);
+  }
+  // Store in localStorage
+  try {
+    localStorage.setItem('wow-rcg-count', generationCount.toString());
+  } catch (e) {
+    console.warn('Could not save generation count:', e);
+  }
+}
+
+function loadGenerationCount() {
+  try {
+    const saved = localStorage.getItem('wow-rcg-count');
+    if (saved) {
+      generationCount = parseInt(saved, 10) || 0;
+      if (generationCounter) {
+        generationCounter.textContent = generationCount;
+      }
+    }
+  } catch (e) {
+    console.warn('Could not load generation count:', e);
+  }
+}
+
+// ============================================================================
 // INITIALIZATION
 // ============================================================================
+
+// Load saved generation count
+loadGenerationCount();
 
 // Populate server dropdown (keep existing options from HTML, add all realms)
 if (serverLock) {
@@ -152,21 +204,68 @@ generateNameCheckbox.addEventListener('change', () => {
   }
 });
 
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  // Space or G = Generate
+  if ((e.code === 'Space' || e.key === 'g' || e.key === 'G') && !e.ctrlKey && !e.altKey && !e.metaKey) {
+    // Don't trigger if user is typing in an input/select
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
+      return;
+    }
+    e.preventDefault();
+    if (generateBtn) generateBtn.click();
+  }
+  // R = Random All
+  if ((e.key === 'r' || e.key === 'R') && !e.ctrlKey && !e.altKey && !e.metaKey) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
+      return;
+    }
+    e.preventDefault();
+    if (randomAllBtn) randomAllBtn.click();
+  }
+});
+
 // ============================================================================
 // CHARACTER GENERATION
 // ============================================================================
 
+// Flag to temporarily ignore filters for Random All button
+let ignoreFiltersForGeneration = false;
+
+// Random All button - generates ignoring all filters but keeps them set in UI
+if (randomAllBtn) {
+  randomAllBtn.addEventListener('click', () => {
+    // Set flag to ignore filters for this generation only
+    // This allows complete randomization while preserving UI filter state
+    ignoreFiltersForGeneration = true;
+    
+    // Trigger generation
+    if (generateBtn) generateBtn.click();
+    
+    // Play audio
+    if (typeof playButtonAudio === 'function') {
+      playButtonAudio(0);
+    }
+  });
+}
+
 generateBtn.addEventListener('click', () => {
+  try {
+  // Check if we should ignore filters (from Random All button)
+  const shouldIgnoreFilters = ignoreFiltersForGeneration;
+  ignoreFiltersForGeneration = false; // Reset flag after reading
+  
   // selectedFaction is now a global variable from icon selection
-  const selectedRace = raceLock.value;
-  const selectedClass = classLock.value;
-  const selectedGender = genderSelect.value;
+  const selectedRace = shouldIgnoreFilters ? '' : raceLock.value;
+  const selectedClass = shouldIgnoreFilters ? '' : classLock.value;
+  const selectedGender = shouldIgnoreFilters ? '' : genderSelect.value;
+  const effectiveFaction = shouldIgnoreFilters ? '' : selectedFaction;
   // "none" = Don't Randomize (default); "random" = pick random; otherwise specific realm
-  const selectedServer = serverLock ? serverLock.value : "none";
+  const selectedServer = shouldIgnoreFilters ? 'random' : (serverLock ? serverLock.value : "none");
 
   // Filter races
   let filteredRaces = races.filter(r => {
-    const factionMatch = !selectedFaction || r.faction === selectedFaction || r.faction === "Both";
+    const factionMatch = !effectiveFaction || r.faction === effectiveFaction || r.faction === "Both";
     const classMatch = !selectedClass || r.classes.includes(selectedClass);
     return factionMatch && classMatch;
   });
@@ -184,12 +283,12 @@ generateBtn.addEventListener('click', () => {
   // Determine faction
   let faction = raceObj.faction;
   if (raceObj.faction === "Both") {
-    faction = selectedFaction || factions[Math.floor(Math.random() * factions.length)].name;
+    faction = effectiveFaction || factions[Math.floor(Math.random() * factions.length)].name;
   }
 
-  // Generate name if enabled
+  // Generate name if enabled (or if Random All was clicked)
   let name = "";
-  if (generateNameCheckbox.checked) {
+  if (generateNameCheckbox.checked || shouldIgnoreFilters) {
     let genderToUse = selectedGender;
     if (!selectedGender) genderToUse = Math.random() < GENDER_RANDOM_PROBABILITY ? "male" : "female";
     name = generateRaceName(raceObj.name, includeAccents.checked, genderToUse);
@@ -209,6 +308,9 @@ generateBtn.addEventListener('click', () => {
   }
 
   applyFactionBackground(faction);
+
+  // Update generation counter
+  updateGenerationCount();
 
   displayResult(faction, raceObj, classChoice, name);
   // append server to result display
@@ -269,6 +371,10 @@ generateBtn.addEventListener('click', () => {
 
     result.appendChild(serverRow);
   }
+  } catch (error) {
+    console.error('Generation error:', error);
+    showError('Failed to generate character. Please try again.');
+  }
 });
 
 // ============================================================================
@@ -279,9 +385,9 @@ function displayResult(faction, raceObj, chosenClass, name) {
   result.innerHTML = '';
 
   // Helper function to create icon + label rows with optional "Lock" button
-  const makeIconRow = (iconSrc, label, value, tooltipText, selectTargetId) => {
+  const makeIconRow = (iconSrc, label, value, tooltipText, selectTargetId, showTooltip = false) => {
      const row = document.createElement('div');
-     row.className = 'result-row icon-row tooltip';
+     row.className = showTooltip ? 'result-row icon-row tooltip' : 'result-row icon-row';
 
      if (iconSrc) {
        const img = document.createElement('img');
@@ -295,10 +401,12 @@ function displayResult(faction, raceObj, chosenClass, name) {
      span.innerHTML = `<strong>${label}:</strong> ${value}`;
      row.appendChild(span);
 
-     const tip = document.createElement('span');
-     tip.className = 'tooltiptext';
-     tip.textContent = tooltipText;
-     row.appendChild(tip);
+     if (showTooltip) {
+       const tip = document.createElement('span');
+       tip.className = 'tooltiptext';
+       tip.textContent = tooltipText;
+       row.appendChild(tip);
+     }
 
     // add a small select button to auto-select this value in the controls dropdown
     if (selectTargetId) {
@@ -435,11 +543,23 @@ function displayResult(faction, raceObj, chosenClass, name) {
 // ============================================================================
 
 function generateRaceName(race, withAccents, gender = "") {
-  let syll = raceNameSyllables[race] || raceNameSyllables["Human"];
+  try {
+    let syll = raceNameSyllables[race] || raceNameSyllables["Human"];
+    
+    if (!syll) {
+      console.warn(`No syllables found for race: ${race}`);
+      return "Hero";
+    }
 
-  // Pick syllables depending on gender if defined
-  if (gender && syll[gender]) syll = syll[gender];
-  else if (syll.any) syll = syll.any;
+    // Pick syllables depending on gender if defined
+    if (gender && syll[gender]) syll = syll[gender];
+    else if (syll.any) syll = syll.any;
+    
+    // Validate syllable structure
+    if (!syll.start || !syll.end || syll.start.length === 0 || syll.end.length === 0) {
+      console.warn(`Invalid syllable structure for race: ${race}`);
+      return "Hero";
+    }
 
   const parts = [randomChoice(syll.start)];
   if (Math.random() > NAME_MIDDLE_PROBABILITY) parts.push(randomChoice(syll.middle));
@@ -451,6 +571,10 @@ function generateRaceName(race, withAccents, gender = "") {
 
   if (withAccents) name = applyAccents(name);
   return name;
+  } catch (error) {
+    console.error('Name generation error:', error);
+    return "Hero";
+  }
 }
 
 function randomChoice(arr) {

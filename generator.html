@@ -6,7 +6,8 @@
   <title>WoW Character Generator</title>
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/generator.css">
-  <script src="assets/js/audiohandler.js"></script>
+  <link rel="preload" href="assets/img/bg/Shadowlands.webm" as="video" type="video/webm">
+  <script src="assets/js/audiohandler.js" defer></script>
 </head>
 <body>
   <div class="noSelect" id="generatorOverlay">
@@ -42,11 +43,11 @@
             </div>
             <div class="control-group">
               <label for="raceLock">Race:</label>
-              <select id="raceLock"></select>
+              <select id="raceLock" aria-label="Select character race"></select>
             </div>
             <div class="control-group">
               <label for="classLock">Class:</label>
-              <select id="classLock"></select>
+              <select id="classLock" aria-label="Select character class"></select>
             </div>
 
             <div class="control-group hidden" id="genderContainer">
@@ -76,7 +77,7 @@
 
             <div class="control-group">
               <label for="serverLock">Server:</label>
-              <select id="serverLock">
+              <select id="serverLock" aria-label="Select server option">
                 <option value="none" selected>Don't Randomize</option>
                 <option value="random">Random Server</option>
               </select>
@@ -94,15 +95,20 @@
       <!-- END generator-ui -->
 
       <div class="ui-buttons">
-        <button class="button" id="generateBtn">Generate</button>
+        <button class="button" id="generateBtn" accesskey="g" title="Generate Character (Space or G)">Generate</button>
+        <button class="button" id="randomAllBtn" title="Random Everything (R)">Random All</button>
+      </div>
+
+      <div class="generation-counter" id="generationCounter" aria-live="polite">
+        Characters Generated: <span id="counterValue">0</span>
       </div>
 
     </div>
     <!-- END centered -->
 
     <!-- FOOTER NOTE -->
-    <div class="footer-note">
-      World of Warcraft is a trademark or registered trademark of Blizzard Entertainment. This is a fan-made tool.
+    <div class="footer-note" role="contentinfo">
+      <p>World of Warcraft is a trademark or registered trademark of Blizzard Entertainment. This is a fan-made tool.</p>
     </div>
 
     <!-- BACKGROUND VIDEO -->
