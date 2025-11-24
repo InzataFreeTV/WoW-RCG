@@ -6,10 +6,10 @@
   <title>WoW Character Generator - Portal</title>
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/portal.css">
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
   <script src="assets/js/audiohandler.js"></script>
 </head>
-<body>
+<body class="preload">
   <div class="noSelect" id="portalOverlay">
 
     <!-- LOGO -->
@@ -40,29 +40,40 @@
         <p class="mainText">Randomized Character Creator</p>
         <p class="mainText">Fanmade by Inzata</p>
       </div>
-      <button class="button" id="enterBtn" onclick="playButtonAudio(0); window.location.href='generator.html';">Enter</button>
+      <button class="button" id="enterBtn" onclick="playButtonAudio(0); startGeneratorTransition();">Enter</button>
     </div>
 
     <!-- COPYRIGHT TEXT -->
     <div class="fullWidth">
-      <p id="copyrightText">2004-2020 World of Warcraft is a trademark or registered trademark of Blizzard Entertainment. This is a fan-made tool.</p>
+      <p id="copyrightText">2004-2026 World of Warcraft is a trademark or registered trademark of Blizzard Entertainment. This is a fan-made tool.</p>
     </div>
 
     <!-- BUILD VERSION -->
-    <p id="buildVersion">Version 9.0.1 (35944) (Release x64)</p>
+    <p id="buildVersion">Version 12.0.0 (Release x64)</p>
 
     <!-- BUILD DATE -->
-    <p id="buildDate">Oct 13 2020</p>
+    <p id="buildDate">Feb 6 2026</p>
 
     <!-- BACKGROUND VIDEO -->
     <div class="fullScreen">
       <div class="centered">
         <video autoplay muted loop id="background">
-          <source src="assets/img/bg/Shadowlands.webm" type="video/webm">
-          <source src="assets/img/bg/Shadowlands.mp4" type="video/mp4">
+          <source src="assets/img/bg/Midnight.webm" type="video/webm">
+          <source src="assets/img/bg/Midnight.mp4" type="video/mp4">
         </video>
       </div>
     </div>
+
+    <!-- TRANSITION LOGO OVERLAY -->
+    <div id="transitionLogo" class="transition-logo">
+      <img src="assets/img/ui/logos/Midnight.png" alt="Midnight Logo">
+    </div>
   </div>
+  <script>
+    // Fade-in after load
+    document.addEventListener('DOMContentLoaded', ()=> {
+      document.body.classList.remove('preload');
+    });
+  </script>
 </body>
 </html>

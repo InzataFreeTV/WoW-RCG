@@ -6,15 +6,15 @@
   <title>WoW Character Generator</title>
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/generator.css">
-  <link rel="preload" href="assets/img/bg/Shadowlands.webm" as="video" type="video/webm">
+  <link rel="preload" href="assets/img/bg/Midnight.webm" as="video" type="video/webm">
   <script src="assets/js/audiohandler.js" defer></script>
 </head>
-<body>
+<body class="preload">
   <div class="noSelect" id="generatorOverlay">
 
     <!-- BACK BUTTON -->
     <div id="backButtonContainer" class="foreground">
-      <button class="button" onclick="window.location.href='portal.html'; playButtonAudio(0);">Back</button>
+      <button class="button" onclick="playButtonAudio(0); startPortalTransition();">Back</button>
     </div>
 
     <!-- MAIN GENERATOR BOX -->
@@ -115,13 +115,24 @@
     <div class="fullScreen">
       <div class="centered">
         <video autoplay muted loop id="background">
-          <source src="assets/img/bg/Shadowlands.webm" type="video/webm">
-          <source src="assets/img/bg/Shadowlands.mp4" type="video/mp4">
+          <source src="assets/img/bg/Midnight.webm" type="video/webm">
+          <source src="assets/img/bg/Midnight.mp4" type="video/mp4">
         </video>
       </div>
+    </div>
+
+    <!-- TRANSITION LOGO OVERLAY -->
+    <div id="transitionLogo" class="transition-logo">
+      <img src="assets/img/ui/logos/Midnight.png" alt="Midnight Logo">
     </div>
   </div>
 
   <script type="module" src="script.js"></script>
+  <script>
+    // Fade-in after load
+    document.addEventListener('DOMContentLoaded', ()=> {
+      document.body.classList.remove('preload');
+    });
+  </script>
 </body>
 </html>

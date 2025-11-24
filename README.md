@@ -21,7 +21,7 @@
 
 
 ## 1. Overview
-WoW‑RCG is a front‑end single‑page generator written in vanilla HTML/CSS/JavaScript. It produces random character combinations using curated data sources (classes, races, factions, syllable‑based name construction, and connected realm lists). Designed for inspiration, theming, roleplay, or quick prototyping.
+WoW‑RCG is a front‑end single‑page generator written in vanilla HTML/CSS/JavaScript. It produces random character combinations using curated data sources (classes, races, factions, syllable‑based name construction, and connected realm lists). Designed for inspiration, theming, roleplay, or quick character creation.
 
 ## 2. Features
 - Random character generation: faction, race, class, optional server & name.
@@ -33,14 +33,9 @@ WoW‑RCG is a front‑end single‑page generator written in vanilla HTML/CSS/J
 - Keyboard shortcuts (e.g. Space/G to generate, R for Random All).
 - Generation counter with local persistence (`localStorage`).
 - Copy-to-clipboard helper for sharing results.
-- Responsive layout (desktop, tablet, mobile breakpoints).
-- Accessibility enhancements (ARIA roles, focus states, reduced motion support).
 
-## 3. Demo & Screenshots (optional)
-You can add screenshots / short GIF exports of a generation flow here:
-```
-assets/img/ui/screenshots/
-```
+## 3. Demo & Screenshots
+
 If you would like, request screenshot placeholders and they can be added.
 
 ## 4. Quick Start
@@ -49,7 +44,6 @@ If you would like, request screenshot placeholders and they can be added.
 1. Install Node.js (includes `npx`). Verify: `node --version`, `npx --version`.
 2. Double‑click `launch.bat` (starts a lightweight static server on `http://127.0.0.1:8000`).
 3. Browser opens automatically; if not, visit `http://127.0.0.1:8000` manually.
-4. If `npx` is missing, the script falls back to opening `index.html` directly (module features may fail without a server).
 
 Troubleshooting tips are in `How to launch (Windows).txt`.
 
@@ -101,7 +95,6 @@ Notes:
 - Deferred non‑critical scripts.
 - Lightweight vanilla JS (no external runtime dependencies).
 - Local caching via `localStorage` for generation counts.
-- Optimized animation usage (GPU‑friendly transforms, reduced layout thrash).
 - Modular data separation for easier lazy‑loading (future enhancement).
 
 ## 9. Roadmap / Improvements
@@ -114,6 +107,7 @@ Planned / suggested next steps:
 - Lore snippets per race/class combo.
 - Theme toggle (Dark / Light / Classic parchment).
 - Sound / subtle UI feedback pack.
+- Rewrite the server launch
 
 ## 10. License
 This project is released under the MIT License – see `LICENSE` for full text.

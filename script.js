@@ -9,23 +9,7 @@ const ACCENT_PROBABILITY = 0.2;
 const NAME_MIDDLE_PROBABILITY = 0.3;
 const GENDER_RANDOM_PROBABILITY = 0.5;
 
-const factionBackgrounds = {
-  "Alliance": {
-    mp4: "assets/img/bg/Shadowlands.mp4",
-    webm: "assets/img/bg/Shadowlands.webm",
-    poster: "assets/img/bg/Shadowlands.png"
-  },
-  "Horde": {
-    mp4: "assets/img/bg/Shadowlands.mp4",
-    webm: "assets/img/bg/Shadowlands.webm",
-    poster: "assets/img/bg/Shadowlands.png"
-  },
-  "Neutral": {
-    mp4: "assets/img/bg/Shadowlands.mp4",
-    webm: "assets/img/bg/Shadowlands.webm",
-    poster: "assets/img/bg/Shadowlands.png"
-  }
-};
+// Removed factionBackgrounds; background no longer changes dynamically per faction.
 
 // --- DOM ELEMENT REFERENCES ---
 const raceLock = document.getElementById('raceLock');
@@ -142,6 +126,9 @@ if (serverLock) {
 // ============================================================================
 
 function updateFilters() {
+  // Guard: only run on generator page where dropdowns exist
+  if (!raceLock || !classLock) return;
+
   // selectedFaction is now a global variable
   const selectedRace = raceLock.value;
   const selectedClass = classLock.value;
@@ -191,18 +178,22 @@ updateFilters();
 // ============================================================================
 
 // Filtering event listeners
-raceLock.addEventListener('change', updateFilters);
-classLock.addEventListener('change', updateFilters);
+if (raceLock) raceLock.addEventListener('change', updateFilters);
+if (classLock) classLock.addEventListener('change', updateFilters);
 
 // Show/hide gender when name generation is toggled
-generateNameCheckbox.addEventListener('change', () => {
-  includeAccents.disabled = !generateNameCheckbox.checked;
-  if (generateNameCheckbox.checked) {
-    genderContainer.classList.remove('hidden');
-  } else {
-    genderContainer.classList.add('hidden');
-  }
-});
+if (generateNameCheckbox) {
+  generateNameCheckbox.addEventListener('change', () => {
+    if (includeAccents) includeAccents.disabled = !generateNameCheckbox.checked;
+    if (genderContainer) {
+      if (generateNameCheckbox.checked) {
+        genderContainer.classList.remove('hidden');
+      } else {
+        genderContainer.classList.add('hidden');
+      }
+    }
+  });
+}
 
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
@@ -249,7 +240,12 @@ if (randomAllBtn) {
   });
 }
 
-generateBtn.addEventListener('click', () => {
+if (generateBtn) generateBtn.addEventListener('click', () => {
+  // Play audio
+  if (typeof playButtonAudio === 'function') {
+    playButtonAudio(0);
+  }
+  
   try {
   // Check if we should ignore filters (from Random All button)
   const shouldIgnoreFilters = ignoreFiltersForGeneration;
@@ -306,8 +302,6 @@ generateBtn.addEventListener('click', () => {
   } else {
     chosenServer = selectedServer;
   }
-
-  applyFactionBackground(faction);
 
   // Update generation counter
   updateGenerationCount();
@@ -593,59 +587,56 @@ function applyAccents(name) {
 }
 
 // ============================================================================
-// BACKGROUND MANAGEMENT
+// PAGE TRANSITIONS
 // ============================================================================
-
-function applyFactionBackground(faction) {
-  const bg = document.getElementById('background');
-  if (!bg) return;
-
-  const entry = factionBackgrounds[faction];
-  if (!entry) {
-    // fallback to default Shadowlands background
-    if (bg.tagName && bg.tagName.toLowerCase() === 'video') {
-      let webmSrc = bg.querySelector('source[type="video/webm"]');
-      let mp4Src = bg.querySelector('source[type="video/mp4"]');
-
-      if (!webmSrc) { webmSrc = document.createElement('source'); webmSrc.type = 'video/webm'; bg.appendChild(webmSrc); }
-      if (!mp4Src) { mp4Src = document.createElement('source'); mp4Src.type = 'video/mp4'; bg.appendChild(mp4Src); }
-
-      webmSrc.src = 'assets/img/bg/Shadowlands.webm';
-      mp4Src.src = 'assets/img/bg/Shadowlands.mp4';
-
-      try { bg.removeAttribute('src'); } catch(e){}
-      try { bg.load(); } catch(e){}
-      bg.muted = true;
-      bg.play().catch(()=>{});
-    } else {
-      bg.style.backgroundImage = `url("assets/img/bg/Shadowlands.png")`;
-      bg.style.backgroundSize = 'cover';
-      bg.style.backgroundPosition = 'center';
+function startGeneratorTransition() {
+  const overlay = document.getElementById('portalOverlay');
+  const logo = document.getElementById('transitionLogo');
+  
+  if (overlay) {
+    // Show logo first
+    if (logo) {
+      logo.classList.add('show');
     }
-    return;
-  }
-
-  if (bg.tagName && bg.tagName.toLowerCase() === 'video') {
-    // ensure sources exist / set them
-    let webmSrc = bg.querySelector('source[type="video/webm"]');
-    let mp4Src  = bg.querySelector('source[type="video/mp4"]');
-
-    if (!webmSrc) { webmSrc = document.createElement('source'); webmSrc.type = 'video/webm'; bg.appendChild(webmSrc); }
-    if (!mp4Src)  { mp4Src  = document.createElement('source'); mp4Src.type  = 'video/mp4';  bg.appendChild(mp4Src); }
-
-    webmSrc.src = entry.webm;
-    mp4Src.src  = entry.mp4;
-
-    // remove any direct src attr (use <source>)
-    try { bg.removeAttribute('src'); } catch(e){}
-
-    try { bg.load(); } catch(e){}
-    bg.muted = true; // autoplay friendly
-    bg.play().catch(()=>{});
+    
+    // Start fade out after brief delay
+    setTimeout(() => {
+      overlay.classList.add('fade-out');
+      overlay.addEventListener('transitionend', () => {
+        window.location.href = 'generator.html';
+      }, { once: true });
+    }, 300);
   } else {
-    // element is non-video; set CSS background image (poster)
-    bg.style.backgroundImage = `url("${entry.poster}")`;
-    bg.style.backgroundSize = 'cover';
-    bg.style.backgroundPosition = 'center';
+    window.location.href = 'generator.html';
   }
+}
+// Expose for inline onclick in portal.html
+if (typeof window !== 'undefined') {
+  window.startGeneratorTransition = startGeneratorTransition;
+}
+
+function startPortalTransition() {
+  const overlay = document.getElementById('generatorOverlay');
+  const logo = document.getElementById('transitionLogo');
+  
+  if (overlay) {
+    // Show logo first
+    if (logo) {
+      logo.classList.add('show');
+    }
+    
+    // Start fade out after brief delay
+    setTimeout(() => {
+      overlay.classList.add('fade-out');
+      overlay.addEventListener('transitionend', () => {
+        window.location.href = 'portal.html';
+      }, { once: true });
+    }, 300);
+  } else {
+    window.location.href = 'portal.html';
+  }
+}
+// Expose for inline onclick in generator.html
+if (typeof window !== 'undefined') {
+  window.startPortalTransition = startPortalTransition;
 }

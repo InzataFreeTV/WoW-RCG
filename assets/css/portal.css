@@ -1,4 +1,6 @@
 /* Portal-specific styles */
+body.preload { opacity:0; background:#000; }
+body { transition: opacity 1s ease; background:#000; }
 
 #portalOverlay {
     position: fixed;
@@ -78,7 +80,7 @@
     border: none;
     outline: none;
     display: inline-block;
-    background: url('../img/ui/logos/Shadowlands.png') no-repeat top;
+    background: url('../img/ui/logos/Midnight.png') no-repeat top;
     transform: scale(0.65);
     transition: 0.2s;
     filter: drop-shadow(0px 0px 6px #000);
@@ -98,4 +100,26 @@
 .slidecontainer {
     width: 450px;
     z-index: 4;
+}
+
+/* Transition Logo Overlay */
+.transition-logo {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+
+.transition-logo.show {
+    opacity: 1;
+}
+
+.transition-logo img {
+    width: 600px;
+    height: auto;
+    filter: drop-shadow(0px 0px 20px rgba(0,0,0,0.8));
 }

@@ -1,4 +1,36 @@
 /* Generator-specific styles */
+body.preload { opacity:0; background:#000; }
+body { transition: opacity 1s ease; background:#000; }
+
+#generatorOverlay {
+    transition: opacity 1s ease-out;
+}
+
+#generatorOverlay.fade-out {
+    opacity: 0;
+}
+
+/* Transition Logo Overlay */
+.transition-logo {
+    position: fixed;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+
+.transition-logo.show {
+    opacity: 1;
+}
+
+.transition-logo img {
+    width: 600px;
+    height: auto;
+    filter: drop-shadow(0px 0px 20px rgba(0,0,0,0.8));
+}
 
 #generatorOverlay {
     position: fixed;
