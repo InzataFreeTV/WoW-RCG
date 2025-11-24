@@ -1,40 +1,127 @@
-# WoW-RCG — World of Warcraft Random Character Generator
+<div align="center">
+  <img src="assets/img/ui/logos/vanilla.png" alt="World of Warcraft Logo" height="80" />
+  <h1>WoW‑RCG – World of Warcraft Random Character Generator</h1>
+  <em>Generate fully random (or filtered) WoW characters: faction, race, class, server & name – with WoW‑styled interface.</em>
+  <p><strong>Status:</strong> Active • <strong>License:</strong> MIT • <strong>Last Updated:</strong> Nov 24, 2025</p>
+  <p><sub>Fan-made project – not affiliated with Blizzard Entertainment.</sub></p>
+</div>
 
-An interactive World of Warcraft–themed character generator built with HTML, CSS and JavaScript.  
-Generate random characters with faction, race, class and name — styled in a WoW-inspired UI.
+## Table of Contents
+1. Overview
+2. Features
+3. Demo & Screenshots
+4. Quick Start (Windows & Manual)
+5. Usage Guide
+6. Project Structure
+7. Data & Extensibility
+8. Performance & Quality
+9. Roadmap / Improvements
+10. License
+11. Credits
 
 
+## 1. Overview
+WoW‑RCG is a front‑end single‑page generator written in vanilla HTML/CSS/JavaScript. It produces random character combinations using curated data sources (classes, races, factions, syllable‑based name construction, and connected realm lists). Designed for inspiration, theming, roleplay, or quick prototyping.
 
-## 🪶 Quick features
+## 2. Features
+- Random character generation: faction, race, class, optional server & name.
+- Filter controls: Horde / Alliance / Any + class / race constraints.
+- Name synthesis: gendered syllable pools per race (extensible).
+- Server selection: EU connected-realm sampling (more regions pluggable).
+- Cinematic looping video / image backgrounds (easily swappable).
+- Lock & reroll mechanics (retain selected traits, randomize the rest).
+- Keyboard shortcuts (e.g. Space/G to generate, R for Random All).
+- Generation counter with local persistence (`localStorage`).
+- Copy-to-clipboard helper for sharing results.
+- Responsive layout (desktop, tablet, mobile breakpoints).
+- Accessibility enhancements (ARIA roles, focus states, reduced motion support).
 
-- Randomized faction, race, class and name (male, female, or any).
-- Faction / race / class filters (Alliance, Horde, Any).
-- Server generator using Blizzard connected-realm data (EU list included).
-- Cinematic muted looping video background (MP4 / MKV).
-- Responsive WoW-styled UI and smooth animations.
+## 3. Demo & Screenshots (optional)
+You can add screenshots / short GIF exports of a generation flow here:
+```
+assets/img/ui/screenshots/
+```
+If you would like, request screenshot placeholders and they can be added.
 
-## 🗃️ Files
+## 4. Quick Start
 
-- index.html — main generator UI
-- landing.html — intro / portal screen
-- style.css — UI styling and animations
-- script.js — core app logic
-- nameData.js — race/gender name syllables
-- serverData.js — connected realm data (EU)
-- backgrounds/ — cinematic loops (warwithin-bg.mp4 / .mkv)
-- assets/ — icons, classes, races, UI textures
+### A) Recommended (Windows – launch script)
+1. Install Node.js (includes `npx`). Verify: `node --version`, `npx --version`.
+2. Double‑click `launch.bat` (starts a lightweight static server on `http://127.0.0.1:8000`).
+3. Browser opens automatically; if not, visit `http://127.0.0.1:8000` manually.
+4. If `npx` is missing, the script falls back to opening `index.html` directly (module features may fail without a server).
 
-## 🕶️ Customization
+Troubleshooting tips are in `How to launch (Windows).txt`.
 
-- Replace backgrounds/*.mp4 or *.mkv for different cinematic loops.
-- Edit nameData.js to add syllables or new race/gender sets.
-- Extend serverData.js to include NA, OCE, or other regions.
+### B) Manual
+```
+npx http-server -p 8000 -a 127.0.0.1
+# then browse to:
+http://127.0.0.1:8000
+```
 
-## 👨 Author:
+### C) Minimal (No Server)
+Open `generator.html` directly. Works only if the browser allows ES modules from file URLs (Chrome often blocks advanced module usage). A local server is recommended.
 
-* Bozhidar Inzov  [github](https://github.com/InzataFreeTV)
+## 5. Usage Guide
+1. Open the generator page (e.g. `index.html` / `generator.html`).
+2. Optionally set faction / race / class filters.
+3. Toggle name generation & server inclusion if desired.
+4. Press Generate (or hit Space / G). Use Random All (or R) to ignore filters & fully randomize.
+5. Use lock controls to keep specific attributes while rerolling others.
+6. Copy name results using the copy button for quick pasting into WoW.
 
-## ℹ️ More Info:
+## 6. Project Structure (Key Files)
+```
+index.html          # Entry / main generator UI
+portal.html         # (If present) Intro / portal screen
+script.js           # Core logic / generation orchestration
+gameData.js         # Faction / race / class data
+nameData.js         # Syllable definitions per race & gender
+servers.js          # EU connected realm list (extensible)
+style.css           # Global + shared styles
+assets/css/*.css    # Page‑specific styles (generator / portal)
+launch.bat          # Convenience server launcher (Windows)
+LICENSE             # MIT license text
+```
+Additional assets under `assets/` & `icons/` provide UI textures, fonts, audio, and imagery.
 
-- Inspired by World of Warcraft — Blizzard Entertainment (this project is fan-made; not affiliated with Blizzard)  
-- Data sources: Blizzard connected realms documentation
+## 7. Data & Extensibility
+| Domain | Source File | How to Extend |
+|--------|-------------|---------------|
+| Classes / Races / Factions | `gameData.js` | Add new variants or sub‑groups; keep naming consistent |
+| Name syllables | `nameData.js` | Append new syllable arrays per race/gender; ensure balanced lengths |
+| Realms | `servers.js` | Add objects for NA / OCE / other regions; maintain structure |
+
+Notes:
+- Keep data arrays normalized; generation logic expects consistent keys.
+- Add validation if introducing new optional attributes (e.g. specialization, level).
+
+## 8. Performance & Quality
+- Deferred non‑critical scripts.
+- Lightweight vanilla JS (no external runtime dependencies).
+- Local caching via `localStorage` for generation counts.
+- Optimized animation usage (GPU‑friendly transforms, reduced layout thrash).
+- Modular data separation for easier lazy‑loading (future enhancement).
+
+## 9. Roadmap / Improvements
+Planned / suggested next steps:
+- Character history & favorites.
+- Export as shareable image / card.
+- URL parameter sharing (seed & locked attributes).
+- Multi‑character party generation.
+- Class specializations & talent flavor.
+- Lore snippets per race/class combo.
+- Theme toggle (Dark / Light / Classic parchment).
+- Sound / subtle UI feedback pack.
+
+## 10. License
+This project is released under the MIT License – see `LICENSE` for full text.
+
+## 11. Credits
+- Author: Bozhidar Inzov (GitHub: [InzataFreeTV](https://github.com/InzataFreeTV))
+- World of Warcraft IP & lore © Blizzard Entertainment (used under fan project context; no affiliation).
+- Community feedback & open data sources for realm connectivity.
+
+---
+Enjoy generating Characters! ⚔️
