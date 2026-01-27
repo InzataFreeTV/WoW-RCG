@@ -15,10 +15,10 @@
     <!-- LOGO -->
     <button class="xPacButton" id="logo" onclick="manualChangeExpac(); playButtonAudio(1);"></button>
 
-    <!-- QUIT AND OPTIONS BUTTONS -->
+    <!-- GHUB AND OPTIONS BUTTONS -->
     <div id="quitButtonContainer" class="foreground">
       <button id="optButton" class="button" onclick="playButtonAudio(0); showSettings();">Options</button>
-      <button id="quitButton" class="button" onclick="location.href='https://github.com/InzataFreeTV/WoW-RCG'; playButtonAudio(0);">Quit</button>
+      <button id="quitButton" class="button" onclick="location.href='https://github.com/InzataFreeTV/WoW-RCG'; playButtonAudio(0);">GitHub</button>
     </div>
 
     <!-- OPTIONS PANEL -->
@@ -27,7 +27,7 @@
       <div class="UIBoxBackground" style="width: 500px; height: 75px"></div>
       <div class="slidecontainer">
         <p class="text" style="position: fixed; margin-top: 0;">Sound</p>
-        <input type="range" min="1" max="100" value="30" class="slider" id="volumeSlider" oninput="adjustVolume();">
+        <input type="range" min="0" max="100" value="30" class="slider" id="volumeSlider" oninput="adjustVolume();">
       </div>
     </div>
 
@@ -38,7 +38,7 @@
       <div id="mainTextContainer">
         <p class="mainText">World of Warcraft</p>
         <p class="mainText">Randomized Character Creator</p>
-        <p class="mainText">Fanmade by Inzata</p>
+        <p class="mainText">Made by Inzata</p>
       </div>
       <button class="button" id="enterBtn" onclick="playButtonAudio(0); startGeneratorTransition();">Enter</button>
     </div>
@@ -52,7 +52,7 @@
     <p id="buildVersion">Version 12.0.0 (Release x64)</p>
 
     <!-- BUILD DATE -->
-    <p id="buildDate">Feb 6 2026</p>
+    <p id="buildDate">Jan 22 2026</p>
 
     <!-- BACKGROUND VIDEO -->
     <div class="fullScreen">

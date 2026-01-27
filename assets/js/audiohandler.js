@@ -46,7 +46,7 @@ var dateMap = [
     'Oct 13 2020',
     'Nov 28 2022',
     'Aug 26 2024',
-    'February 6 2026'
+    'Jan 22 2026'
 ];
 
 var buttonColorMap = [
