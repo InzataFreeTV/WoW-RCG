@@ -228,38 +228,27 @@ label {
 
 /* Dropdowns */
 select {
-  padding: 4px 6px;
-  font-size: 1rem;
-  border: 16px solid;
-  border-image: url('../img/ui/UI_BorderAtlas.png') 40% round;
-  background: rgba(0, 0, 0, 0.75);
-  color: gold;
-  outline: none;
-  transition: all 0.3s;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gold"><path d="M7 10l5 5 5-5z"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 6px center;
-  background-size: 12px;
-  padding-right: 20px;
-  min-width: 210px;
+    padding: 4px 6px;
+    font-size: 1rem;
+    border: 16px solid #000;
+    border-image: url('../img/ui/UI_BorderAtlas.png') 40% round;
+    background: rgba(0, 0, 0, 0.75);
+    color: gold;
+    outline: none;
+    transition: all 0.3s;
+    appearance: none;
+    /*! background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gold"><path d="M7 10l5 5 5-5z"/></svg>'); */
+    /*! background-repeat: no-repeat; */
+    /*! background-position: right; */
+    background-size: 20px;
+    padding-right: 20px;
+    min-width: 210px;
+    cursor: url('../img/ui/Point.png'), auto;
+    /*! background-width: 5px; */
 }
 
-select:hover {
-  box-shadow: 0 0 10px gold;
-}
-
-/* Dropdown options */
 select option {
-  background: rgba(0, 0, 0, 0.9);
-  color: gold;
-  cursor: url('../img/ui/Point.png'), auto !important;
-  padding: 8px;
-  border: 8px solid;
-  border-image: url('../img/ui/UI_BorderAtlas.png') 40% round;
-  margin: 2px;
+    cursor: url('../img/ui/Cast.png'), auto;
 }
 
 /* Checkbox styling (keep separate) */

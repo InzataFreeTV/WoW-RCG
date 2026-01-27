@@ -145,7 +145,7 @@ body { transition: opacity 1s ease; background:#000; }
   line-height: 1.25;
   font-size: 0.95rem;
 
-  /* allow tall tooltips if necessary (won't block pointer events) */
+  /* allow tall tooltips if necessary */
   max-height: 60vh;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
@@ -163,12 +163,12 @@ body { transition: opacity 1s ease; background:#000; }
   text-shadow: 0 0 3px #000;
   user-select: none;
 
-  /* keep footer always at the bottom of the viewport */
+  /* keep footer always at the bottom */
   position: fixed;
   left: 0;
   bottom: 8px;
   width: 100%;
-  pointer-events: none; /* don't block clicks */
+  pointer-events: none;
   z-index: 1000;
   background: transparent;
   padding: 4px 8px;
