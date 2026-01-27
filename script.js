@@ -24,10 +24,14 @@ const genderSelect = document.getElementById('genderSelect');
 const genderContainer = document.getElementById('genderContainer');
 const randomAllBtn = document.getElementById('randomAllBtn');
 const generationCounter = document.getElementById('counterValue');
+const historyBtn = document.getElementById('historyBtn');
+const historyPanel = document.getElementById('historyPanel');
+const historyList = document.getElementById('historyList');
 
 // --- STATE ---
 let selectedFaction = ""; // Empty string = "Any"/"Neutral"
 let generationCount = 0;
+let characterHistory = []; // Track last 25 characters
 
 // --- IMPORTS ---
 import('./assets/js/audiohandler.js');
@@ -57,6 +61,34 @@ if (factionIcons) {
     });
   });
 }
+
+// Setup history panel toggle
+if (historyBtn && historyPanel) {
+  historyBtn.addEventListener('click', () => {
+    historyPanel.classList.toggle('open');
+    if (typeof playButtonAudio === 'function') {
+      playButtonAudio(0);
+    }
+  });
+}
+
+// Setup history panel close button
+const historyCloseBtn = document.getElementById('historyCloseBtn');
+if (historyCloseBtn && historyPanel) {
+  historyCloseBtn.addEventListener('click', () => {
+    historyPanel.classList.remove('open');
+    if (typeof playButtonAudio === 'function') {
+      playButtonAudio(0);
+    }
+  });
+}
+
+// Close history panel with Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && historyPanel && historyPanel.classList.contains('open')) {
+    historyPanel.classList.remove('open');
+  }
+});
 
 // ============================================================================
 // UTILITY FUNCTIONS
@@ -105,11 +137,96 @@ function loadGenerationCount() {
 }
 
 // ============================================================================
+// CHARACTER HISTORY FUNCTIONS
+// ============================================================================
+
+function addToHistory(character) {
+  // Keep only last 25 characters
+  characterHistory.unshift(character);
+  if (characterHistory.length > 25) {
+    characterHistory.pop();
+  }
+  updateHistoryDisplay();
+  saveHistory();
+}
+
+function updateHistoryDisplay() {
+  if (!historyList) return;
+  
+  historyList.innerHTML = '';
+  characterHistory.forEach((char, index) => {
+    const item = document.createElement('div');
+    item.className = 'history-item';
+    
+    // Add faction-based class for background styling
+    if (char.faction === 'Horde') {
+      item.classList.add('horde');
+    } else if (char.faction === 'Alliance') {
+      item.classList.add('alliance');
+    }
+    
+    // Create character info text for copying
+    const charInfo = `${char.name} - ${char.race} ${char.class} (${char.faction}) - ${char.server}`;
+    
+    item.innerHTML = `
+      <div class="history-item-content">
+        <div><span class="history-item-label">Name:</span> <span class="history-item-value">${char.name}</span></div>
+        <div><span class="history-item-label">Race:</span> <span class="history-item-value">${char.race}</span></div>
+        <div><span class="history-item-label">Class:</span> <span class="history-item-value">${char.class}</span></div>
+        <div><span class="history-item-label">Faction:</span> <span class="history-item-value">${char.faction}</span></div>
+        <div><span class="history-item-label">Server:</span> <span class="history-item-value">${char.server}</span></div>
+      </div>
+      <button class="history-copy-btn" title="Copy character info">📋</button>
+    `;
+    
+    // Add copy functionality
+    const copyBtn = item.querySelector('.history-copy-btn');
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(charInfo);
+        copyBtn.textContent = '✓';
+        setTimeout(() => {
+          copyBtn.textContent = '📋';
+        }, 1500);
+        if (typeof playButtonAudio === 'function') {
+          playButtonAudio(0);
+        }
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    });
+    
+    historyList.appendChild(item);
+  });
+}
+
+function saveHistory() {
+  try {
+    localStorage.setItem('wow-rcg-history', JSON.stringify(characterHistory));
+  } catch (e) {
+    console.warn('Could not save character history:', e);
+  }
+}
+
+function loadHistory() {
+  try {
+    const saved = localStorage.getItem('wow-rcg-history');
+    if (saved) {
+      characterHistory = JSON.parse(saved);
+      updateHistoryDisplay();
+    }
+  } catch (e) {
+    console.warn('Could not load character history:', e);
+  }
+}
+
+// ============================================================================
 // INITIALIZATION
 // ============================================================================
 
-// Load saved generation count
+// Load saved generation count and history
 loadGenerationCount();
+loadHistory();
 
 // Populate server dropdown (keep existing options from HTML, add all realms)
 if (serverLock) {
@@ -305,6 +422,15 @@ if (generateBtn) generateBtn.addEventListener('click', () => {
 
   // Update generation counter
   updateGenerationCount();
+
+  // Add to character history
+  addToHistory({
+    name: name || '(No Name)',
+    race: raceObj.name,
+    class: classChoice,
+    faction: faction,
+    server: chosenServer || '(Random)'
+  });
 
   displayResult(faction, raceObj, classChoice, name);
   // append server to result display

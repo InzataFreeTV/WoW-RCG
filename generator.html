@@ -11,113 +11,139 @@
 </head>
 <body class="preload">
   <div class="noSelect" id="generatorOverlay">
+    <!-- HEADER WITH TITLE AND HISTORY BUTTON -->
+    <header class="generator-header">
+      <h1 class="generator-title">Character Generator</h1>
+      <button class="history-btn" id="historyBtn" title="View Character History">📋 History</button>
+    </header>
+
+    <!-- HISTORY PANEL (SLIDING) -->
+    <div id="historyPanel" class="history-panel">
+      <div class="history-header">
+        <div class="history-title-bar">
+          <h2>Character History</h2>
+          <button class="history-close-btn" id="historyCloseBtn" title="Close History">✕</button>
+        </div>
+        <div class="counter-box history-counter">
+          <div class="counter-label">Generated</div>
+          <div class="counter-value" id="counterValue">0</div>
+        </div>
+      </div>
+      <div id="historyList" class="history-list"></div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="generator-container">
+      <!-- LEFT PANEL: controls -->
+      <div class="generator-panel controls-panel">
+        <div class="panel-header">Options</div>
+        
+        <div class="controls" aria-controls="result">
+          <!-- Faction Selection -->
+          <div class="control-group">
+            <label class="group-label">Faction</label>
+            <div class="faction-icons" id="factionIcons">
+              <div class="faction-icon selected" data-faction="" title="Neutral (Any)">
+                <img src="icons/factions/neutral.png" alt="Neutral" style="opacity: 0.8; filter: grayscale(30%)">
+              </div>
+              <div class="faction-icon" data-faction="Horde" title="Horde">
+                <img src="icons/factions/horde.png" alt="Horde">
+              </div>
+              <div class="faction-icon" data-faction="Alliance" title="Alliance">
+                <img src="icons/factions/alliance.png" alt="Alliance">
+              </div>
+            </div>
+          </div>
+
+          <!-- Race Selection -->
+          <div class="control-group">
+            <label for="raceLock" class="group-label">Race</label>
+            <select id="raceLock" aria-label="Select character race"></select>
+          </div>
+
+          <!-- Class Selection -->
+          <div class="control-group">
+            <label for="classLock" class="group-label">Class</label>
+            <select id="classLock" aria-label="Select character class"></select>
+          </div>
+
+          <!-- Gender Selection -->
+          <div class="control-group hidden" id="genderContainer">
+            <label for="genderSelect" class="group-label">Gender</label>
+            <select id="genderSelect">
+              <option value="">Any</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+
+          <!-- Server Selection -->
+          <div class="control-group">
+            <label for="serverLock" class="group-label">Server</label>
+            <select id="serverLock" aria-label="Select server option">
+              <option value="none" selected>Don't Randomize</option>
+              <option value="random">Random Server</option>
+            </select>
+          </div>
+
+          <!-- Divider -->
+          <div class="divider"></div>
+
+          <!-- Checkboxes -->
+          <div class="control-group">
+            <label class="wow-checkbox">
+              <input type="checkbox" id="generateName" />
+              <span class="checkbox-box" aria-hidden="true"></span>
+              <span class="checkbox-text">Generate Name</span>
+            </label>
+          </div>
+
+          <div class="control-group">
+            <label class="wow-checkbox">
+              <input type="checkbox" id="includeAccents" />
+              <span class="checkbox-box" aria-hidden="true"></span>
+              <span class="checkbox-text">Include Accents</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL: result -->
+      <div class="generator-panel results-panel">
+        <div class="panel-header">Character Details</div>
+        <div id="result" class="result" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <!-- BOTTOM ACTION BUTTONS -->
+    <div class="action-buttons">
+      <button class="action-btn primary" id="generateBtn" accesskey="g" title="Generate Character (Space or G)">
+        <span class="btn-icon">⚡</span> Generate
+      </button>
+      <button class="action-btn secondary" id="randomAllBtn" title="Random Everything (R)">
+        <span class="btn-icon">🎲</span> Random All
+      </button>
+    </div>
 
     <!-- BACK BUTTON -->
     <div id="backButtonContainer" class="foreground">
       <button class="button" onclick="playButtonAudio(0); startPortalTransition();">Back</button>
     </div>
+  </div>
+  <!-- END generatorOverlay -->
 
-    <!-- MAIN GENERATOR BOX -->
+  <!-- FOOTER NOTE -->
+  <div class="footer-note" role="contentinfo">
+    <p>World of Warcraft is a trademark or registered trademark of Blizzard Entertainment. This is a fan-made tool.</p>
+  </div>
+
+  <!-- BACKGROUND VIDEO -->
+  <div class="fullScreen">
     <div class="centered">
-      <div class="UIBox generator-box" style="width: 800px; height: 500px"></div>
-      <div class="UIBoxBackground generator-box" style="width: 850px; height: 550px"></div>
-
-      <!-- TWO-COLUMN GENERATOR UI -->
-      <div class="generator-ui" role="region" aria-label="Generator UI">
-
-        <!-- LEFT PANEL: controls -->
-        <div class="left-panel">
-          <div class="controls" aria-controls="result">
-            <div class="control-group">
-              <div class="faction-icons" id="factionIcons">
-                <div class="faction-icon selected" data-faction="" title="Neutral (Any)">
-                  <img src="icons/factions/neutral.png" alt="Neutral" style="opacity: 0.8; filter: grayscale(30%)">
-                </div>
-                <div class="faction-icon" data-faction="Horde" title="Horde">
-                  <img src="icons/factions/horde.png" alt="Horde">
-                </div>
-                <div class="faction-icon" data-faction="Alliance" title="Alliance">
-                  <img src="icons/factions/alliance.png" alt="Alliance">
-                </div>
-              </div>
-            </div>
-            <div class="control-group">
-              <label for="raceLock">Race:</label>
-              <select id="raceLock" aria-label="Select character race"></select>
-            </div>
-            <div class="control-group">
-              <label for="classLock">Class:</label>
-              <select id="classLock" aria-label="Select character class"></select>
-            </div>
-
-            <div class="control-group hidden" id="genderContainer">
-              <label for="genderSelect" id="genderLabel">Gender:</label>
-              <select id="genderSelect">
-                <option value="">Any</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-            </div>
-
-            <div class="control-group">
-              <label class="wow-checkbox">
-                <input type="checkbox" id="generateName" />
-                <span class="checkbox-box" aria-hidden="true"></span>
-                <span class="checkbox-text">Generate Name</span>
-              </label>
-            </div>
-
-            <div class="control-group">
-              <label class="wow-checkbox">
-                <input type="checkbox" id="includeAccents" />
-                <span class="checkbox-box" aria-hidden="true"></span>
-                <span class="checkbox-text">Include Accents</span>
-              </label>
-            </div>
-
-            <div class="control-group">
-              <label for="serverLock">Server:</label>
-              <select id="serverLock" aria-label="Select server option">
-                <option value="none" selected>Don't Randomize</option>
-                <option value="random">Random Server</option>
-              </select>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- RIGHT PANEL: result -->
-        <div class="right-panel">
-          <div id="result" class="result" aria-live="polite"></div>
-        </div>
-
-      </div>
-      <!-- END generator-ui -->
-
-      <div class="ui-buttons">
-        <button class="button" id="generateBtn" accesskey="g" title="Generate Character (Space or G)">Generate</button>
-        <button class="button" id="randomAllBtn" title="Random Everything (R)">Random All</button>
-      </div>
-
-      <div class="generation-counter" id="generationCounter" aria-live="polite">
-        Characters Generated: <span id="counterValue">0</span>
-      </div>
-
-    </div>
-    <!-- END centered -->
-
-    <!-- FOOTER NOTE -->
-    <div class="footer-note" role="contentinfo">
-      <p>World of Warcraft is a trademark or registered trademark of Blizzard Entertainment. This is a fan-made tool.</p>
-    </div>
-
-    <!-- BACKGROUND VIDEO -->
-    <div class="fullScreen">
-      <div class="centered">
-        <video autoplay muted loop id="background">
-          <source src="assets/img/bg/Midnight.webm" type="video/webm">
-          <source src="assets/img/bg/Midnight.mp4" type="video/mp4">
-        </video>
+      <video autoplay muted loop id="background">
+        <source src="assets/img/bg/Midnight.webm" type="video/webm">
+        <source src="assets/img/bg/Midnight.mp4" type="video/mp4">
+      </video>
       </div>
     </div>
 
