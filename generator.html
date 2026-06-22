@@ -11,11 +11,6 @@
 </head>
 <body class="preload">
   <div class="noSelect" id="generatorOverlay">
-    <!-- HEADER WITH TITLE AND HISTORY BUTTON -->
-    <header class="generator-header">
-      <h1 class="generator-title">Character Generator</h1>
-      <button class="history-btn" id="historyBtn" title="View Character History">📋 History</button>
-    </header>
 
     <!-- HISTORY PANEL (SLIDING) -->
     <div id="historyPanel" class="history-panel">
@@ -32,19 +27,24 @@
       <div id="historyList" class="history-list"></div>
     </div>
 
-    <!-- MAIN CONTAINER -->
-    <div class="generator-container">
-      <!-- LEFT PANEL: controls -->
-      <div class="generator-panel controls-panel">
-        <div class="panel-header">Options</div>
-        
+    <!-- MAIN LAYOUT: sidebar + result -->
+    <div class="main-layout">
+
+      <!-- LEFT: control sidebar -->
+      <aside class="control-sidebar">
+        <div class="sidebar-brand">
+          <span>Character</span>
+          <span>Generator</span>
+        </div>
+
         <div class="controls" aria-controls="result">
-          <!-- Faction Selection -->
+
+          <!-- Faction -->
           <div class="control-group">
             <label class="group-label">Faction</label>
             <div class="faction-icons" id="factionIcons">
               <div class="faction-icon selected" data-faction="" title="Neutral (Any)">
-                <img src="icons/factions/neutral.png" alt="Neutral" style="opacity: 0.8; filter: grayscale(30%)">
+                <img src="icons/factions/neutral.png" alt="Neutral" style="opacity:0.8;filter:grayscale(30%)">
               </div>
               <div class="faction-icon" data-faction="Horde" title="Horde">
                 <img src="icons/factions/horde.png" alt="Horde">
@@ -55,19 +55,19 @@
             </div>
           </div>
 
-          <!-- Race Selection -->
+          <!-- Race -->
           <div class="control-group">
             <label for="raceLock" class="group-label">Race</label>
             <select id="raceLock" aria-label="Select character race"></select>
           </div>
 
-          <!-- Class Selection -->
+          <!-- Class -->
           <div class="control-group">
             <label for="classLock" class="group-label">Class</label>
             <select id="classLock" aria-label="Select character class"></select>
           </div>
 
-          <!-- Gender Selection -->
+          <!-- Gender (shown by JS when relevant) -->
           <div class="control-group hidden" id="genderContainer">
             <label for="genderSelect" class="group-label">Gender</label>
             <select id="genderSelect">
@@ -77,7 +77,7 @@
             </select>
           </div>
 
-          <!-- Server Selection -->
+          <!-- Server -->
           <div class="control-group">
             <label for="serverLock" class="group-label">Server</label>
             <select id="serverLock" aria-label="Select server option">
@@ -86,7 +86,6 @@
             </select>
           </div>
 
-          <!-- Divider -->
           <div class="divider"></div>
 
           <!-- Checkboxes -->
@@ -106,14 +105,20 @@
             </label>
           </div>
         </div>
+
+        <!-- History at the bottom of the sidebar -->
+        <button class="history-btn" id="historyBtn" title="View Character History">
+          📋 History
+        </button>
+      </aside>
+
+      <!-- RIGHT: result -->
+      <div id="result" class="result" aria-live="polite">
+        <div class="result-placeholder">Roll your fate...</div>
       </div>
 
-      <!-- RIGHT PANEL: result -->
-      <div class="generator-panel results-panel">
-        <div class="panel-header">Character Details</div>
-        <div id="result" class="result" aria-live="polite"></div>
-      </div>
     </div>
+    <!-- END main-layout -->
 
     <!-- BOTTOM ACTION BUTTONS -->
     <div class="action-buttons">
@@ -129,6 +134,7 @@
     <div id="backButtonContainer" class="foreground">
       <button class="button" onclick="playButtonAudio(0); startPortalTransition();">Back</button>
     </div>
+
   </div>
   <!-- END generatorOverlay -->
 
@@ -144,19 +150,17 @@
         <source src="assets/img/bg/Midnight.webm" type="video/webm">
         <source src="assets/img/bg/Midnight.mp4" type="video/mp4">
       </video>
-      </div>
     </div>
+  </div>
 
-    <!-- TRANSITION LOGO OVERLAY -->
-    <div id="transitionLogo" class="transition-logo">
-      <img src="assets/img/ui/logos/Midnight.png" alt="Midnight Logo">
-    </div>
+  <!-- TRANSITION LOGO OVERLAY -->
+  <div id="transitionLogo" class="transition-logo">
+    <img src="assets/img/ui/logos/Midnight.png" alt="Midnight Logo">
   </div>
 
   <script type="module" src="script.js"></script>
   <script>
-    // Fade-in after load
-    document.addEventListener('DOMContentLoaded', ()=> {
+    document.addEventListener('DOMContentLoaded', () => {
       document.body.classList.remove('preload');
     });
   </script>

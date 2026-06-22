@@ -358,286 +358,151 @@ if (randomAllBtn) {
 }
 
 if (generateBtn) generateBtn.addEventListener('click', () => {
-  // Play audio
+  // Play audio immediately (before the delay)
   if (typeof playButtonAudio === 'function') {
     playButtonAudio(0);
   }
-  
-  try {
-  // Check if we should ignore filters (from Random All button)
+
+  // Read and reset flag immediately so rapid clicks don't interfere
   const shouldIgnoreFilters = ignoreFiltersForGeneration;
-  ignoreFiltersForGeneration = false; // Reset flag after reading
-  
-  // selectedFaction is now a global variable from icon selection
-  const selectedRace = shouldIgnoreFilters ? '' : raceLock.value;
-  const selectedClass = shouldIgnoreFilters ? '' : classLock.value;
-  const selectedGender = shouldIgnoreFilters ? '' : genderSelect.value;
-  const effectiveFaction = shouldIgnoreFilters ? '' : selectedFaction;
-  // "none" = Don't Randomize (default); "random" = pick random; otherwise specific realm
-  const selectedServer = shouldIgnoreFilters ? 'random' : (serverLock ? serverLock.value : "none");
+  ignoreFiltersForGeneration = false;
 
-  // Filter races
-  let filteredRaces = races.filter(r => {
-    const factionMatch = !effectiveFaction || r.faction === effectiveFaction || r.faction === "Both";
-    const classMatch = !selectedClass || r.classes.includes(selectedClass);
-    return factionMatch && classMatch;
-  });
+  // Start generating animation
+  generateBtn.classList.add('generating');
+  generateBtn.disabled = true;
+  generateBtn.innerHTML = '<span class="btn-icon">⚡</span> Rolling...';
 
-  // Pick race
-  const raceObj = selectedRace
-    ? races.find(r => r.name === selectedRace)
-    : filteredRaces[Math.floor(Math.random() * filteredRaces.length)];
+  setTimeout(() => {
+    try {
+      const selectedRace = shouldIgnoreFilters ? '' : raceLock.value;
+      const selectedClass = shouldIgnoreFilters ? '' : classLock.value;
+      const selectedGender = shouldIgnoreFilters ? '' : genderSelect.value;
+      const effectiveFaction = shouldIgnoreFilters ? '' : selectedFaction;
+      const selectedServer = shouldIgnoreFilters ? 'random' : (serverLock ? serverLock.value : "none");
 
-  // Pick class
-  const classChoice = selectedClass && raceObj.classes.includes(selectedClass)
-    ? selectedClass
-    : raceObj.classes[Math.floor(Math.random() * raceObj.classes.length)];
+      // Filter races
+      let filteredRaces = races.filter(r => {
+        const factionMatch = !effectiveFaction || r.faction === effectiveFaction || r.faction === "Both";
+        const classMatch = !selectedClass || r.classes.includes(selectedClass);
+        return factionMatch && classMatch;
+      });
 
-  // Determine faction
-  let faction = raceObj.faction;
-  if (raceObj.faction === "Both") {
-    faction = effectiveFaction || factions[Math.floor(Math.random() * factions.length)].name;
-  }
+      // Pick race
+      const raceObj = selectedRace
+        ? races.find(r => r.name === selectedRace)
+        : filteredRaces[Math.floor(Math.random() * filteredRaces.length)];
 
-  // Generate name if enabled (or if Random All was clicked)
-  let name = "";
-  if (generateNameCheckbox.checked || shouldIgnoreFilters) {
-    let genderToUse = selectedGender;
-    if (!selectedGender) genderToUse = Math.random() < GENDER_RANDOM_PROBABILITY ? "male" : "female";
-    name = generateRaceName(raceObj.name, includeAccents.checked, genderToUse);
-  }
+      // Pick class
+      const classChoice = selectedClass && raceObj.classes.includes(selectedClass)
+        ? selectedClass
+        : raceObj.classes[Math.floor(Math.random() * raceObj.classes.length)];
 
-  // Choose server depending on selection:
-  // - "none" -> do not display server
-  // - "random" -> pick a random realm from serverList
-  // - specific realm -> use that value
-  let chosenServer = "";
-  if (selectedServer === "none") {
-    chosenServer = "";
-  } else if (selectedServer === "random") {
-    chosenServer = serverList[Math.floor(Math.random() * serverList.length)];
-  } else {
-    chosenServer = selectedServer;
-  }
-
-  // Update generation counter
-  updateGenerationCount();
-
-  // Add to character history
-  addToHistory({
-    name: name || '(No Name)',
-    race: raceObj.name,
-    class: classChoice,
-    faction: faction,
-    server: chosenServer || '(Random)'
-  });
-
-  displayResult(faction, raceObj, classChoice, name);
-  // append server to result display
-  if (chosenServer) {
-    // Build a result row that will show a tooltip of connected realms on cursor
-    const serverRow = document.createElement('div');
-    serverRow.className = 'result-row';
-    serverRow.innerHTML = `<strong>Server:</strong>&nbsp;<span class="server-name">${chosenServer}</span>`;
-
-    // Tooltip element that will follow the cursor
-    const tooltip = document.createElement('div');
-    tooltip.className = 'custom-server-tooltip';
-    // responsive maximum width (will wrap into as many rows as needed)
-    tooltip.style.maxWidth = Math.min(520, Math.floor(window.innerWidth * 0.6)) + 'px';
-    tooltip.style.whiteSpace = 'normal';
-
-    // find the connected group (if any) and list all realms in that group
-    const group = connectedRealms.find(g => g.includes(chosenServer));
-    if (group) {
-      // include a label and put each realm on its own row
-      tooltip.innerHTML = '<strong>Connected Realms:</strong><br>' + group.join('<br>');
-    } else {
-      tooltip.textContent = 'No connected realms';
-    }
-
-    // Show tooltip while hovering and follow cursor
-    let attached = false;
-    const onMouseEnter = (e) => {
-      // adjust width on show so wrapping is consistent
-      tooltip.style.maxWidth = Math.min(520, Math.floor(window.innerWidth * 0.6)) + 'px';
-      if (!attached) {
-        document.body.appendChild(tooltip);
-        attached = true;
+      // Determine faction
+      let faction = raceObj.faction;
+      if (raceObj.faction === "Both") {
+        faction = effectiveFaction || factions[Math.floor(Math.random() * factions.length)].name;
       }
-      tooltip.style.left = (e.clientX + 12) + 'px';
-      tooltip.style.top = (e.clientY + 12) + 'px';
-      tooltip.style.visibility = 'visible';
-    };
-    const onMouseMove = (e) => {
-      tooltip.style.left = (e.clientX + 12) + 'px';
-      tooltip.style.top = (e.clientY + 12) + 'px';
-    };
-    const onMouseLeave = () => {
-      tooltip.style.visibility = 'hidden';
-      if (attached && tooltip.parentElement) tooltip.parentElement.removeChild(tooltip);
-      attached = false;
-    };
 
-    // attach tooltip handlers to the server-name span so it only triggers when hovering the name
-    const nameSpan = serverRow.querySelector('.server-name');
-    if (nameSpan) {
-      nameSpan.style.textDecoration = 'underline';
-      nameSpan.style.cursor = 'help';
-      nameSpan.addEventListener('mouseenter', onMouseEnter);
-      nameSpan.addEventListener('mousemove', onMouseMove);
-      nameSpan.addEventListener('mouseleave', onMouseLeave);
+      // Generate name if enabled (or if Random All was clicked)
+      let name = "";
+      if (generateNameCheckbox.checked || shouldIgnoreFilters) {
+        let genderToUse = selectedGender;
+        if (!selectedGender) genderToUse = Math.random() < GENDER_RANDOM_PROBABILITY ? "male" : "female";
+        name = generateRaceName(raceObj.name, includeAccents.checked, genderToUse);
+      }
+
+      // Choose server
+      let chosenServer = "";
+      if (selectedServer === "none") {
+        chosenServer = "";
+      } else if (selectedServer === "random") {
+        chosenServer = serverList[Math.floor(Math.random() * serverList.length)];
+      } else {
+        chosenServer = selectedServer;
+      }
+
+      // Update generation counter
+      updateGenerationCount();
+
+      // Add to character history
+      addToHistory({
+        name: name || '(No Name)',
+        race: raceObj.name,
+        class: classChoice,
+        faction: faction,
+        server: chosenServer || '(No Server)'
+      });
+
+      displayResult(faction, raceObj, classChoice, name, chosenServer);
+    } catch (error) {
+      console.error('Generation error:', error);
+      showError('Failed to generate character. Please try again.');
+    } finally {
+      generateBtn.classList.remove('generating');
+      generateBtn.disabled = false;
+      generateBtn.innerHTML = '<span class="btn-icon">⚡</span> Generate';
     }
-
-    result.appendChild(serverRow);
-  }
-  } catch (error) {
-    console.error('Generation error:', error);
-    showError('Failed to generate character. Please try again.');
-  }
+  }, 350);
 });
 
 // ============================================================================
 // DISPLAY FUNCTIONS
 // ============================================================================
 
-function displayResult(faction, raceObj, chosenClass, name) {
+function displayResult(faction, raceObj, chosenClass, name, chosenServer) {
   result.innerHTML = '';
 
-  // Helper function to create icon + label rows with optional "Lock" button
-  const makeIconRow = (iconSrc, label, value, tooltipText, selectTargetId, showTooltip = false) => {
-     const row = document.createElement('div');
-     row.className = showTooltip ? 'result-row icon-row tooltip' : 'result-row icon-row';
+  const factionClass = faction === 'Horde' ? 'char-card--horde'
+    : faction === 'Alliance' ? 'char-card--alliance'
+    : 'char-card--neutral';
 
-     if (iconSrc) {
-       const img = document.createElement('img');
-       img.src = iconSrc;
-       img.className = 'icon';
-       img.alt = value;
-       row.appendChild(img);
-     }
-
-     const span = document.createElement('span');
-     span.innerHTML = `<strong>${label}:</strong> ${value}`;
-     row.appendChild(span);
-
-     if (showTooltip) {
-       const tip = document.createElement('span');
-       tip.className = 'tooltiptext';
-       tip.textContent = tooltipText;
-       row.appendChild(tip);
-     }
-
-    // add a small select button to auto-select this value in the controls dropdown
-    if (selectTargetId) {
-      const selBtn = document.createElement('button');
-      selBtn.type = 'button';
-      selBtn.className = 'select-btn';
-      selBtn.title = `Select ${label}`;
-      selBtn.setAttribute('aria-label', `Select ${label}`);
-      // simple text label so the button reads "Lock"
-      selBtn.textContent = 'Lock';
-
-      // click handler: set select value and dispatch change so any listeners run
-      selBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        
-        // Special handling for faction icons
-        if (selectTargetId === 'factionLock') {
-          // Find and click the appropriate faction icon
-          const icons = factionIcons.querySelectorAll('.faction-icon');
-          icons.forEach(icon => {
-            if (icon.getAttribute('data-faction') === value) {
-              icon.click();
-            }
-          });
-        } else {
-          // Original dropdown behavior for race/class
-          const target = document.getElementById(selectTargetId);
-          if (!target) return;
-          // only set if option exists; otherwise try to add it
-          const opt = Array.from(target.options).find(o => o.value === value);
-          if (!opt) {
-            const newOpt = document.createElement('option');
-            newOpt.value = value;
-            newOpt.textContent = value;
-            target.appendChild(newOpt);
-          }
-          target.value = value;
-          // dispatch change so UI updates/reactive logic runs
-          target.dispatchEvent(new Event('change', { bubbles: true }));
-        }
-
-        // visual feedback on button
-        selBtn.classList.add('selected');
-        setTimeout(() => selBtn.classList.remove('selected'), 900);
-      });
-
-      // push button to the far-right of the row
-      selBtn.style.marginLeft = 'auto';
-      row.appendChild(selBtn);
-    }
-
-     return row;
-   };
- 
-   // Faction row (safe icon lookup)
   const factionIcon = (factions.find(f => f.name === faction) || {}).icon || '';
-  result.appendChild(makeIconRow(factionIcon, 'Faction', faction, `${faction} faction`, 'factionLock'));
- 
-   // Race row
-  result.appendChild(makeIconRow(raceObj.icon, 'Race', raceObj.name, `${raceObj.name} race`, 'raceLock'));
- 
-   // Class row (safe icon lookup)
-   const classKey = (chosenClass || '').replace(/\s+/g, '');
-   const classIcon = classes[classKey] || '';
-   result.appendChild(makeIconRow(classIcon, 'Class', chosenClass, `${chosenClass} class`, 'classLock'));
- 
-   // Name row with copy button (only when a name was provided)
-   if (name) {
-     const nameRow = document.createElement('div');
-     nameRow.className = 'result-row';
+  const classKey = (chosenClass || '').replace(/\s+/g, '');
+  const classIcon = classes[classKey] || '';
 
-    const label = document.createElement('span');
-    label.innerHTML = '<strong>Name:</strong>&nbsp;';
-    nameRow.appendChild(label);
+  // --- CARD ---
+  const card = document.createElement('div');
+  card.className = `char-card ${factionClass}`;
+
+  // --- BANNER ---
+  const banner = document.createElement('div');
+  banner.className = 'char-card-banner';
+
+  const raceImg = document.createElement('img');
+  raceImg.src = raceObj.icon;
+  raceImg.alt = raceObj.name;
+  raceImg.className = 'char-card-race-img';
+  banner.appendChild(raceImg);
+
+  const nameBlock = document.createElement('div');
+  nameBlock.className = 'char-card-name-block';
+
+  if (name) {
+    const nameRow = document.createElement('div');
+    nameRow.className = 'char-card-name';
 
     const nameSpan = document.createElement('span');
     nameSpan.className = 'char-name';
     nameSpan.textContent = name;
     nameRow.appendChild(nameSpan);
 
-    // small icon-only copy button
     const copyBtn = document.createElement('button');
     copyBtn.type = 'button';
     copyBtn.className = 'copy-btn';
     copyBtn.title = 'Copy name to clipboard';
     copyBtn.setAttribute('aria-label', 'Copy name to clipboard');
-    copyBtn.innerHTML = `
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-        <rect x="9" y="2" width="6" height="3" rx="1" fill="currentColor"></rect>
-        <rect x="5" y="6" width="14" height="14" rx="2" fill="currentColor"></rect>
-      </svg>
-    `;
-
+    copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><rect x="9" y="2" width="6" height="3" rx="1" fill="currentColor"></rect><rect x="5" y="6" width="14" height="14" rx="2" fill="currentColor"></rect></svg>`;
     const copiedTip = document.createElement('span');
     copiedTip.className = 'copied-tooltip';
     copiedTip.textContent = 'Copied';
     copyBtn.appendChild(copiedTip);
-
-    // push the copy button to the far right
-    copyBtn.style.marginLeft = 'auto';
-    nameRow.appendChild(copyBtn);
-
-    const textToCopy = nameSpan.textContent || '';
-
     copyBtn.addEventListener('click', async () => {
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(textToCopy);
+          await navigator.clipboard.writeText(name);
         } else {
           const ta = document.createElement('textarea');
-          ta.value = textToCopy;
+          ta.value = name;
           ta.style.position = 'fixed';
           ta.style.left = '-9999px';
           document.body.appendChild(ta);
@@ -653,9 +518,149 @@ function displayResult(faction, raceObj, chosenClass, name) {
         console.error('Copy failed', err);
       }
     });
-
-    result.appendChild(nameRow);
+    nameRow.appendChild(copyBtn);
+    nameBlock.appendChild(nameRow);
+  } else {
+    const noName = document.createElement('div');
+    noName.className = 'char-card-no-name';
+    noName.textContent = 'Unnamed';
+    nameBlock.appendChild(noName);
   }
+
+  const subtitle = document.createElement('div');
+  subtitle.className = 'char-card-subtitle';
+  subtitle.textContent = `${raceObj.name} · ${chosenClass}`;
+  nameBlock.appendChild(subtitle);
+  banner.appendChild(nameBlock);
+
+  if (factionIcon) {
+    const factionBadge = document.createElement('img');
+    factionBadge.src = factionIcon;
+    factionBadge.alt = faction;
+    factionBadge.className = 'char-card-faction-badge';
+    banner.appendChild(factionBadge);
+  }
+
+  card.appendChild(banner);
+
+  // --- DETAILS ---
+  const details = document.createElement('div');
+  details.className = 'char-card-details';
+
+  const makeDetailRow = (iconSrc, label, value, selectTargetId, revealIndex) => {
+    const row = document.createElement('div');
+    row.className = 'char-card-detail-row';
+    row.style.setProperty('--reveal-index', revealIndex);
+
+    if (iconSrc) {
+      const img = document.createElement('img');
+      img.src = iconSrc;
+      img.alt = value;
+      img.className = 'icon';
+      row.appendChild(img);
+    }
+
+    const labelEl = document.createElement('span');
+    labelEl.className = 'detail-label';
+    labelEl.textContent = label;
+    row.appendChild(labelEl);
+
+    const valueEl = document.createElement('span');
+    valueEl.className = 'detail-value';
+    valueEl.textContent = value;
+    row.appendChild(valueEl);
+
+    if (selectTargetId) {
+      const selBtn = document.createElement('button');
+      selBtn.type = 'button';
+      selBtn.className = 'select-btn';
+      selBtn.title = `Select ${label}`;
+      selBtn.setAttribute('aria-label', `Select ${label}`);
+      selBtn.textContent = 'Lock';
+      selBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (selectTargetId === 'factionLock') {
+          const icons = factionIcons.querySelectorAll('.faction-icon');
+          icons.forEach(icon => {
+            if (icon.getAttribute('data-faction') === value) icon.click();
+          });
+        } else {
+          const target = document.getElementById(selectTargetId);
+          if (!target) return;
+          const opt = Array.from(target.options).find(o => o.value === value);
+          if (!opt) {
+            const newOpt = document.createElement('option');
+            newOpt.value = value;
+            newOpt.textContent = value;
+            target.appendChild(newOpt);
+          }
+          target.value = value;
+          target.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        selBtn.classList.add('selected');
+        setTimeout(() => selBtn.classList.remove('selected'), 900);
+      });
+      row.appendChild(selBtn);
+    }
+
+    return row;
+  };
+
+  details.appendChild(makeDetailRow(factionIcon, 'Faction', faction, 'factionLock', 0));
+  details.appendChild(makeDetailRow(raceObj.icon, 'Race', raceObj.name, 'raceLock', 1));
+  details.appendChild(makeDetailRow(classIcon, 'Class', chosenClass, 'classLock', 2));
+
+  if (chosenServer) {
+    const serverRow = document.createElement('div');
+    serverRow.className = 'char-card-detail-row';
+    serverRow.style.setProperty('--reveal-index', 3);
+
+    const labelEl = document.createElement('span');
+    labelEl.className = 'detail-label';
+    labelEl.textContent = 'Server';
+    serverRow.appendChild(labelEl);
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'detail-value server-name';
+    nameSpan.style.textDecoration = 'underline';
+    nameSpan.style.cursor = 'help';
+    nameSpan.textContent = chosenServer;
+    serverRow.appendChild(nameSpan);
+
+    const tooltip = document.createElement('div');
+    tooltip.className = 'custom-server-tooltip';
+    tooltip.style.maxWidth = Math.min(520, Math.floor(window.innerWidth * 0.6)) + 'px';
+    tooltip.style.whiteSpace = 'normal';
+    const group = connectedRealms.find(g => g.includes(chosenServer));
+    if (group) {
+      tooltip.innerHTML = '<strong>Connected Realms:</strong><br>' + group.join('<br>');
+    } else {
+      tooltip.textContent = 'No connected realms';
+    }
+
+    let attached = false;
+    nameSpan.addEventListener('mouseenter', (e) => {
+      tooltip.style.maxWidth = Math.min(520, Math.floor(window.innerWidth * 0.6)) + 'px';
+      if (!attached) { document.body.appendChild(tooltip); attached = true; }
+      tooltip.style.left = (e.clientX + 12) + 'px';
+      tooltip.style.top = (e.clientY + 12) + 'px';
+      tooltip.style.visibility = 'visible';
+    });
+    nameSpan.addEventListener('mousemove', (e) => {
+      tooltip.style.left = (e.clientX + 12) + 'px';
+      tooltip.style.top = (e.clientY + 12) + 'px';
+    });
+    nameSpan.addEventListener('mouseleave', () => {
+      tooltip.style.visibility = 'hidden';
+      if (attached && tooltip.parentElement) tooltip.parentElement.removeChild(tooltip);
+      attached = false;
+    });
+
+    details.appendChild(serverRow);
+  }
+
+  card.appendChild(details);
+  result.appendChild(card);
 }
 
 // ============================================================================
