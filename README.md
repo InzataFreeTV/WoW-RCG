@@ -2,7 +2,7 @@
   <img src="assets/img/ui/logos/Vanilla.png" alt="World of Warcraft Logo" height="80" />
   <h1>WoW‑RCG – World of Warcraft Random Character Generator</h1>
   <em>Generate fully random (or filtered) WoW characters: faction, race, class, server & name – with WoW‑styled interface.</em>
-  <p><strong>Status:</strong> Active • <strong>License:</strong> MIT • <strong>Last Updated:</strong> Nov 24, 2025</p>
+  <p><strong>Status:</strong> Active • <strong>License:</strong> MIT • <strong>Last Updated:</strong> June 26, 2026</p>
   <p><sub>Fan-made project – not affiliated with Blizzard Entertainment.</sub></p>
 </div>
 
